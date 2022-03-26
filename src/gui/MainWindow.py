@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow
 
-from src.gui.selectdirectorywidget import SelectDirectoryWidget
+from .selectdirectorywidget import SelectDirectoryWidget
 
 
 class Window(QMainWindow):
