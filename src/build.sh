@@ -11,7 +11,8 @@ src=${1:-"."}
 protos_dir=$src/"protos"
 
 for filepath in `ls $protos_dir/*.proto` ; do
-    echo "Generating grpc files for ${mods[@]}"
+    file=$(basename $filepath)
+    echo "Generating grpc files for ${file%.*}"
     python -m grpc_tools.protoc -I$protos_dir --python_out=$src --grpc_python_out=$src $filepath
 done
 
