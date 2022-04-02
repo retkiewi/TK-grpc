@@ -2,14 +2,14 @@
 syntax = "proto3";
 
 service Format {
-    rpc check_format(Request) returns (Response) {};
+    rpc check_format(FormatRequest) returns (FormatResponse) {};
 }
 
-message Request {
+message FormatRequest {
     string path = 1;
     repeated string formats = 2;
 }
 
-message Response {
+message FormatResponse {
     bool return_value = 1;
 }
