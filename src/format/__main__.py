@@ -1,8 +1,9 @@
-import os
 import grpc
 import concurrent.futures
 import core_format_pb2
 import core_format_pb2_grpc
+
+from format.check_for_formats import check_for_formats
 
 server_port = '[::]:50051'
 
@@ -18,11 +19,6 @@ def main():
     server.add_insecure_port(server_port)
     server.start()
     server.wait_for_termination()
-
-
-def check_for_formats(file_path: str, desired_formats: list[str]) -> bool:
-    _, ext = os.path.splitext(file_path)
-    return ext in desired_formats
 
 
 if __name__ == '__main__':
