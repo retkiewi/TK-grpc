@@ -1,0 +1,9 @@
+grpcio==1.44.0
+grpcio-tools==1.44.0
+numpy==1.22.3
+opencv-python==4.5.5.64
+protobuf==3.19.4
+PyQt5==5.15.6
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.9.1
+six==1.16.0
