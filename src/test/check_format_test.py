@@ -1,5 +1,5 @@
 import unittest
-from format_checker import check_for_formats
+from format.format_checker import check_for_formats
 
 
 desired_formats = ['.jpg', '.jp2']

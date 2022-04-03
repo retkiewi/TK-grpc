@@ -3,7 +3,7 @@ import concurrent.futures
 import core_format_pb2
 import core_format_pb2_grpc
 
-from format.check_for_formats import check_for_formats
+from format.format_checker import check_for_formats
 
 server_port = '[::]:50051'
 

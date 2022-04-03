@@ -40,7 +40,8 @@ class BodyClient(GrpcClient):
 
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
+if True:
     srv_addr = 'localhost:50051'
     with FormatClient(srv_addr) as fc:
         print(fc.ask_for_formats('bubu.jpg', ['.jpg']))
