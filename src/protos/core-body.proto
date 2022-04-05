@@ -1,0 +1,14 @@
+
+syntax = "proto3";
+
+service Body {
+    rpc detect_face(FaceRequest) returns (FaceResponse) {};
+}
+
+message FaceRequest {
+    string path = 1;
+}
+
+message FaceResponse {
+    float return_value = 1;
+}
