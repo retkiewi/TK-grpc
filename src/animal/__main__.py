@@ -1,31 +1,28 @@
 import os
-from itertools import groupby
-from operator import itemgetter
-
+from pathlib import Path
 from detecto import core, utils
 
 
-file_path = "\\elephant.jpg"
-model_path = "\\model_weights.pth"
+module_path = Path('animal')
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+model_path = module_path / "model_weights.pth"
+file_path = module_path / "elephant.jpg"
 
-model_path = dir_path + model_path
-file_path = dir_path + file_path
+animals = [
+    'tiger',
+    'elephant',
+    'panda'
+    ]
 
-model = core.Model.load(model_path, ['tiger', 'elephant', 'panda'])
-image = utils.read_image(file_path)
+model = core.Model.load(model_path, animals)
+image = utils.read_image(str(file_path))
 
-predictions = model.predict(image)
+labels, _, scores = model.predict(image)
 
-labels, _, scores = predictions
+animal_scores = {label: [score for i, score in enumerate(scores)
+                            if labels[i] == label] for label in set(labels)}
 
-animal_score = list(zip(labels, list(map(lambda x: float(x), scores))))
+for label in animal_scores:
+    result = float(max(animal_scores[label]))
+    print(f'{label} {result}')
 
-first = itemgetter(0)
-scores_maximum = [(k, max(item[1] for item in tups_to_sum))
-        for k, tups_to_sum in groupby(sorted(animal_score, key=first), key=first)]
-
-scores_maximum = list(map(lambda x: (x[0], round(x[1] * 100, 2)), scores_maximum))
-
-print(scores_maximum)
