@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QComboBox
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QComboBox, QWidget
 
 from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
 from .filter_selector_widget import FilterSelectorWidget
 from .select_directory_widget import SelectDirectoryWidget
+from .select_format_widget import SelectFormatWidget
 
 
 class Window(QMainWindow):
@@ -12,11 +13,20 @@ class Window(QMainWindow):
         self.setGeometry(300, 300, 600, 400)
         self.model = model
         self.layout = QVBoxLayout()
-        form_widget = SelectDirectoryWidget(parent=self, callback=self.model.update_selected_directory)
-        self.layout.addWidget(form_widget)
+        
+        self.widgets = [
+            SelectFormatWidget(parent=self, callback=self.model.update_selected_directory),
+            SelectDirectoryWidget(parent=self, callback=self.model.update_selected_directory)
+        ]
+        for w in self.widgets:
+            self.layout.addWidget(w)
+
+        self.widget = QWidget()
+        self.widget.setLayout(self.layout)
+        self.setCentralWidget(self.widget)
+
         self.add_filter_selectors()
         self.combo_box = self.add_results_presentation_selector()
-        self.setLayout(self.layout)
         self.setWindowTitle("Welcome")
         self.show()
 
