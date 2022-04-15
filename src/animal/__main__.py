@@ -1,28 +1,26 @@
-import os
-from pathlib import Path
-from detecto import core, utils
+import grpc
+import concurrent.futures
+import core_animal_pb2
+import core_animal_pb2_grpc
+
+from animal.animal_detection import detect_animals
+
+server_port = '[::]:50052'
+
+class Animal(core_animal_pb2_grpc.Animal):
+    def detect_animals(self, target, *args, **kwargs):
+        result = detect_animals(target.path)
+        results = [result[animal] or 0 for animal in target.animals]
+        return core_animal_pb2.AnimalResponse(return_values=results)
 
 
-module_path = Path('animal')
+def main():
+    server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=10))
+    core_animal_pb2_grpc.add_AnimalServicer_to_server(Animal(), server)
+    server.add_insecure_port(server_port)
+    server.start()
+    server.wait_for_termination()
 
-model_path = module_path / "model_weights.pth"
-file_path = module_path / "elephant.jpg"
 
-animals = [
-    'tiger',
-    'elephant',
-    'panda'
-    ]
-
-model = core.Model.load(model_path, animals)
-image = utils.read_image(str(file_path))
-
-labels, _, scores = model.predict(image)
-
-animal_scores = {label: [score for i, score in enumerate(scores)
-                            if labels[i] == label] for label in set(labels)}
-
-for label in animal_scores:
-    result = float(max(animal_scores[label]))
-    print(f'{label} {result}')
-
+if __name__ == '__main__':
+    main()
