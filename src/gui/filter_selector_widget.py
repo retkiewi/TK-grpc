@@ -1,8 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QHBoxLayout, QMainWindow, QRadioButton
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLineEdit, QMessageBox, \
-    QVBoxLayout
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import QLabel, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QVBoxLayout
+
+
 
 
 class FilterSelectorWidget(QWidget):
@@ -62,3 +61,4 @@ class ParametersWindow(QMainWindow):
             else:
                 param_check_box.setChecked(False)
                 weight_input.clear()
+                

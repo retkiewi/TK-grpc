@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QHBoxLayout, QMainWindow, QRadioButton, QLineEdit, QCheckBox
+from PyQt5.QtWidgets import QLineEdit, QCheckBox
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
 
