@@ -4,6 +4,8 @@ from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
 from .filter_selector_widget import FilterSelectorWidget
 from .select_directory_widget import SelectDirectoryWidget
+from .format_parameters_window import FormatParametersWindow
+from .filter_selector_widget import ParametersWindow
 
 
 class Window(QMainWindow):
@@ -24,7 +26,7 @@ class Window(QMainWindow):
         self.add_selector('File format', lambda x: self.model.update_filters('format', x))
 
     def add_selector(self, label, callback):
-        widget = FilterSelectorWidget(label, callback, self)
+        widget = FilterSelectorWidget(label, FormatParametersWindow(callback), self)
         self.layout.addWidget(widget)
 
     def add_results_presentation_selector(self):
