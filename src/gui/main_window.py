@@ -4,6 +4,7 @@ from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
 from .filter_selector_widget import FilterSelectorWidget
 from .select_directory_widget import SelectDirectoryWidget
+from .path_template_widget import PathTemplateWidget
 
 
 class Window(QMainWindow):
@@ -14,6 +15,8 @@ class Window(QMainWindow):
         self.layout = QVBoxLayout()
         form_widget = SelectDirectoryWidget(parent=self, callback=self.model.update_selected_directory)
         self.layout.addWidget(form_widget)
+        select_template_path_widget = PathTemplateWidget(parent=self, callback=self.model.update_template_path)
+        self.layout.addWidget(select_template_path_widget)
         self.add_filter_selectors()
         self.combo_box = self.add_results_presentation_selector()
         self.setLayout(self.layout)
