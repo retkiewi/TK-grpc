@@ -1,7 +1,4 @@
-from PyQt5.QtWidgets import QLabel, QHBoxLayout
-from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QVBoxLayout
-
-
+from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QVBoxLayout, QMessageBox, QLabel, QHBoxLayout
 
 
 class FilterSelectorWidget(QWidget):
@@ -49,6 +46,13 @@ class ParametersWindow(QMainWindow):
         self.chosen_values = {}
         for param_check_box, weight_input in self.params:
             if param_check_box.isChecked():
+                if weight_input.text() == "":
+                    msg = QMessageBox()
+                    msg.setText(f"Input cannot be empty for {param_check_box.text()}")
+                    msg.setWindowTitle("Error")
+                    msg.exec_()
+                    weight_input.setFocus()
+                    return
                 self.chosen_values[param_check_box.text()] = int(weight_input.text())
         self.callback(self.chosen_values)
         self.close()
@@ -61,4 +65,3 @@ class ParametersWindow(QMainWindow):
             else:
                 param_check_box.setChecked(False)
                 weight_input.clear()
-                
