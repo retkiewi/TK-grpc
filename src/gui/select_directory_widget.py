@@ -5,7 +5,7 @@ class SelectDirectoryWidget(QWidget):
     def __init__(self, callback, parent=None):
         super(SelectDirectoryWidget, self).__init__(parent)
         self.callback = callback
-        self.setGeometry(0, 0, 300, 100)
+        self.setGeometry(0, 0, 600, 100)
         layout = QVBoxLayout()
         self.btn = QPushButton("Select directory")
         self.btn.clicked.connect(self.get_directory)
