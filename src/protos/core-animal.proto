@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service Animal {
+  rpc detect_animals(AnimalRequest) returns (AnimalResponse) {};
+}
+
+message AnimalRequest {
+  string path = 1;
+  repeated string animals = 2;
+}
+
+message AnimalResponse {
+  repeated float return_values = 1;
+}
