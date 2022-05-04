@@ -29,7 +29,7 @@ class ParametersWindow(QMainWindow):
         pass
 
     def get_save_geometry(self):
-        return QRect(self.size().width()/2 - 35, self.size().height() - 35, 70, 30)
+        return QRect(int(self.size().width()/2 - 35), self.size().height() - 35, 70, 30)
 
     def save(self):
         self.set_values()

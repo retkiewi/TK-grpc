@@ -4,12 +4,13 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QHBoxLayout, QLineEdit
 
 
 class FilterSelectorWidget(QWidget):
-    def __init__(self, label, parameters_window, ay, with_weight, weight_callback, parent=None):
+    def __init__(self, label, parameters_window, ay, with_weight, weight_callback, model_label, parent=None):
         super(FilterSelectorWidget, self).__init__(parent)
         self.parameters_window = parameters_window
         self.setGeometry(0, ay, 500, 80)
         layout = QHBoxLayout()
         self.checkbox = QCheckBox()
+        self.model_label = model_label
         layout.addWidget(self.checkbox)
         self.label = QLabel(label)
         self.label.setFixedSize(100, 20)

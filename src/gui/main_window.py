@@ -17,6 +17,7 @@ class Window(QMainWindow):
         self.setFixedSize(1000, 800)
         self.model = model
         self.layout = QVBoxLayout()
+        self.widgets = []
         form_widget = SelectDirectoryWidget(parent=self, callback=self.model.update_selected_directory)
         self.layout.addWidget(form_widget)
         self.add_filter_selectors()
@@ -33,6 +34,7 @@ class Window(QMainWindow):
             SelectFormatWindow(lambda x: self.model.update_filters('format', x)),
             100,
             False,
+            'format',
         )
         self.add_selector(
             'Animal',
@@ -56,8 +58,17 @@ class Window(QMainWindow):
             'body',
         )
 
-    def add_selector(self, label, window, ay, with_weight, weight_label=None):
-        widget = FilterSelectorWidget(label, window, ay, with_weight, lambda x: self.set_weight(weight_label, x), self)
+    def add_selector(self, label, window, ay, with_weight, model_label):
+        widget = FilterSelectorWidget(
+            label,
+            window,
+            ay,
+            with_weight,
+            lambda x: self.set_weight(model_label, x),
+            model_label,
+            self,
+        )
+        self.widgets.append(widget)
         self.layout.addWidget(widget)
 
     def add_results_presentation_selector(self):
@@ -68,6 +79,9 @@ class Window(QMainWindow):
         combo_box.setGeometry(10, 400, 100, 25)
         self.layout.addWidget(combo_box)
         return combo_box
+
+    def get_enabled_components(self):
+        return [widget.model_label for widget in self.widgets if widget.checkbox.isChecked()]
 
     def selection_change(self):
         self.model.update_results_presentation(self.combo_box.currentIndex())
