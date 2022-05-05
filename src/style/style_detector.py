@@ -1,4 +1,11 @@
 import requests
+import enum
+
+
+class Type(enum.Enum):
+    line = 'line'
+    clipart = 'clipart'
+    normal = 'normal'
 
 
 class StyleDetector:
@@ -13,18 +20,21 @@ class StyleDetector:
         if self._sub_key is None:
             raise ValueError('Subscription key file was not read properly.')
 
-    def detect_style(self, file_path: str):
+    def detect_style(self, file_path: str) -> int:
         with open(file_path, 'rb') as fileobj:
             data = self.ask_provider(fileobj)
 
         if data is None:
-            # TODO: Handle error
-            print('Oh no!')
-            return 
+            return Type.normal
+        
         image_type = data['imageType']
 
-        # TODO: Do sth with results
-        print(image_type)
+        if image_type['lineDrawingType'] == 1:
+            return Type.line
+        elif image_type['clipArtType'] >= 2:
+            return Type.clipart
+        else:
+            return Type.normal
 
     def ask_provider(self, fileobj) -> dict | None:
         headers = {'Ocp-Apim-Subscription-Key': f'{self._sub_key}'}
@@ -36,7 +46,7 @@ class StyleDetector:
         while retrials:
             try:
                 response = requests.post(self.ENDPOINT, params=params,
-                                        headers=headers, files=files)
+                                        headers=headers, files=files, timeout=0.5)
                 response.raise_for_status()
                 return response.json()
             except (requests.exceptions.HTTPError,
@@ -48,7 +58,10 @@ class StyleDetector:
 
 if __name__ == '__main__':
     sd = StyleDetector()
-    sd.detect_style('iroh lines.png')
-    sd.detect_style('clipart.png')
-    sd.detect_style('General_Iroh.jpg')
+    file_name = 'iroh lines.png'
+    print(f'{file_name} is {sd.detect_style(file_name)}')
+    file_name = 'clipart.png'
+    print(f'{file_name} is {sd.detect_style(file_name)}')
+    file_name = 'General_Iroh.jpg'
+    print(f'{file_name} is {sd.detect_style(file_name)}')
 
