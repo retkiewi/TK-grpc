@@ -3,9 +3,9 @@ import enum
 
 
 class Type(enum.Enum):
-    line = 'line'
-    clipart = 'clipart'
-    normal = 'normal'
+    line = enum.auto()
+    clipart = enum.auto()
+    normal = enum.auto()
 
 
 class StyleDetector:
