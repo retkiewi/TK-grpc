@@ -15,8 +15,8 @@ class SelectAnimalWindow(ParametersWindow):
         self.setWindowTitle('Choose animal')
 
     def add_widgets(self):
-        for i, format_ext in enumerate(self.animals):
-            check_box = QCheckBox(format_ext, self)
+        for i, animal in enumerate(self.animals):
+            check_box = QCheckBox(animal, self)
             check_box.setGeometry(20, 20*i, 100, 20)
             self.check_boxes.append(check_box)
             self.layout.addWidget(check_box)

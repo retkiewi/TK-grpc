@@ -15,8 +15,8 @@ class SelectBodyWindow(ParametersWindow):
         self.setWindowTitle('Choose body part')
 
     def add_widgets(self):
-        for i, format_ext in enumerate(self.parts):
-            check_box = QCheckBox(format_ext, self)
+        for i, body_part in enumerate(self.parts):
+            check_box = QCheckBox(body_part, self)
             check_box.setGeometry(20, 20*i, 100, 20)
             self.check_boxes.append(check_box)
             self.layout.addWidget(check_box)
