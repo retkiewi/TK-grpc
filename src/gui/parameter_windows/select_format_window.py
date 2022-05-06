@@ -8,9 +8,9 @@ class SelectFormatWindow(ParametersWindow):
 
     def __init__(self, callback, parent=None):
         self.formats = [
-            "jpeg", "jpeg2000", "gif", "bmp", "png",
-            "webp", "ico", "img", "xcf", "cgm", "svg",
-            "blend", "xaml", "pdf"
+            ".jpeg", ".jpeg2000", ".gif", ".bmp", ".png",
+            ".webp", ".ico", ".img", ".xcf", ".cgm", ".svg",
+            ".blend", ".xaml", ".pdf", ".jpg"
         ]
         self.check_boxes = []
         super(SelectFormatWindow, self).__init__(callback, parent)
