@@ -2,6 +2,8 @@ from pathlib import Path
 from detecto import core, utils
 
 from animal.animals import animals
+import os
+
 
 module_path = Path('animal')
 
@@ -9,8 +11,10 @@ model_path = module_path / "model_weights.pth"
 
 
 def detect_animals(file_path):
+    print(os.getcwd())
+
     model = core.Model.load(model_path, animals)
-    image = utils.read_image(str(file_path))
+    image = utils.read_image(file_path)
 
     labels, _, scores = model.predict(image)
 
