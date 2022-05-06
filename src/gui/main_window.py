@@ -3,33 +3,79 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QComboBox
 from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
 from .filter_selector_widget import FilterSelectorWidget
+from .filter_selector_widget import ParametersWindow
+from gui.parameter_windows.select_animal_window import SelectAnimalWindow
+from gui.parameter_windows.select_format_window import SelectFormatWindow
+from .parameter_windows.select_body_window import SelectBodyWindow
+from .parameter_windows.select_style_window import SelectStyleWindow
+from .similar_image_widget import SimilarImageWidget
 from .select_directory_widget import SelectDirectoryWidget
 from .path_template_widget import PathTemplateWidget
 from .format_parameters_window import FormatParametersWindow
-from .filter_selector_widget import ParametersWindow
+
+
 
 
 class Window(QMainWindow):
     def __init__(self, model: Model):
         super().__init__()
-        self.setGeometry(300, 300, 600, 400)
+        self.setFixedSize(1000, 800)
         self.model = model
         self.layout = QVBoxLayout()
+        self.widgets = []
         form_widget = SelectDirectoryWidget(parent=self, callback=self.model.update_selected_directory)
         self.layout.addWidget(form_widget)
         select_template_path_widget = PathTemplateWidget(parent=self, callback=self.model.update_template_path)
         self.layout.addWidget(select_template_path_widget)
         self.add_filter_selectors()
+        paste_image_widget = SimilarImageWidget(parent=self, callback=lambda x: self.model.update_filters('similar', x))
+        self.layout.addWidget(paste_image_widget)
         self.combo_box = self.add_results_presentation_selector()
         self.setLayout(self.layout)
-        self.setWindowTitle("Welcome")
+        self.setWindowTitle("Image finder")
         self.show()
 
     def add_filter_selectors(self):
-        self.add_selector('File format', lambda x: self.model.update_filters('format', x))
+        self.add_selector(
+            'File format',
+            SelectFormatWindow(lambda x: self.model.update_filters('format', x)),
+            100,
+            False,
+            'format',
+        )
+        self.add_selector(
+            'Animal',
+            SelectAnimalWindow(lambda x: self.model.update_filters('animal', x)),
+            150,
+            True,
+            'animal',
+        )
+        self.add_selector(
+            'Style',
+            SelectStyleWindow(lambda x: self.model.update_filters('style', x)),
+            200,
+            True,
+            'style',
+        )
+        self.add_selector(
+            'Body parts',
+            SelectBodyWindow(lambda x: self.model.update_filters('body', x)),
+            250,
+            True,
+            'body',
+        )
 
-    def add_selector(self, label, callback):
-        widget = FilterSelectorWidget(label, FormatParametersWindow(callback), self)
+    def add_selector(self, label, window, ay, with_weight, model_label):
+        widget = FilterSelectorWidget(
+            label,
+            window,
+            ay,
+            with_weight,
+            lambda x: self.set_weight(model_label, x),
+            model_label,
+            self,
+        )
+        self.widgets.append(widget)
         self.layout.addWidget(widget)
 
     def add_results_presentation_selector(self):
@@ -37,9 +83,19 @@ class Window(QMainWindow):
         for pres in [p for p in ResultsPresentation]:
             combo_box.addItem(get_name(pres))
         combo_box.currentIndexChanged.connect(self.selection_change)
-        combo_box.setGeometry(0, 200, 100, 25)
+        combo_box.setGeometry(10, 400, 100, 25)
         self.layout.addWidget(combo_box)
         return combo_box
 
+    def get_enabled_components(self):
+        return [widget.model_label for widget in self.widgets if widget.checkbox.isChecked()]
+
     def selection_change(self):
         self.model.update_results_presentation(self.combo_box.currentIndex())
+
+    def set_weight(self, label, value):
+        try:
+            weight = int(value)
+        except ValueError:
+            weight = None
+        self.model.update_weights(label, weight)

@@ -1,67 +1,35 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QVBoxLayout, QMessageBox, QLabel, QHBoxLayout
+from PyQt5.QtCore import QRegExp
+from PyQt5.QtGui import QRegExpValidator
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QHBoxLayout, QLineEdit, QCheckBox
 
 
 class FilterSelectorWidget(QWidget):
-    def __init__(self, label, parameters_window, parent=None):
+    def __init__(self, label, parameters_window, ay, with_weight, weight_callback, model_label, parent=None):
         super(FilterSelectorWidget, self).__init__(parent)
         self.parameters_window = parameters_window
-        self.setGeometry(0, 100, 300, 100)
+        self.setGeometry(0, ay, 500, 80)
         layout = QHBoxLayout()
+        self.checkbox = QCheckBox()
+        self.model_label = model_label
+        layout.addWidget(self.checkbox)
         self.label = QLabel(label)
+        self.label.setFixedSize(100, 20)
+        layout.addWidget(self.label)
         self.btn = QPushButton("Select parameters")
         self.btn.clicked.connect(self.open_window)
-        layout.addWidget(self.label)
         layout.addWidget(self.btn)
+        layout.addStretch()
+        if with_weight:
+            self.weight_label = QLabel('Minimal weight:')
+            layout.addWidget(self.weight_label)
+            self.weight_input = QLineEdit()
+            reg_ex = QRegExp("^[1-9][0-9]?$|^100$")
+            input_validator = QRegExpValidator(reg_ex, self.weight_input)
+            self.weight_input.setValidator(input_validator)
+            self.weight_input.textChanged.connect(weight_callback)
+            self.weight_input.setFixedSize(40, 20)
+            layout.addWidget(self.weight_input)
         self.setLayout(layout)
 
     def open_window(self):
-        self.parameters_window.update_params()
         self.parameters_window.show()
-
-
-class ParametersWindow(QMainWindow):
-    def __init__(self, callback, parent=None):
-        super(ParametersWindow, self).__init__(parent)
-        self.callback = callback
-        self.chosen_values = {}
-        self.padding = 0
-        self.params = []
-        self.setGeometry(100, 100, 500, 500)
-
-        self.layout = QVBoxLayout(self)
-        self.setLayout(self.layout)
-
-        self.add_widgets()
-
-        self.btn = QPushButton("Save", self)
-        self.btn.clicked.connect(self.save)
-        self.btn.move(20, self.padding)
-        self.layout.addChildWidget(self.btn)
-
-    # to be used by inheriting classes for adding widgets to current layout
-    def add_widgets(self):
-        pass
-
-    def save(self):
-        self.chosen_values = {}
-        for param_check_box, weight_input in self.params:
-            if param_check_box.isChecked():
-                if weight_input.text() == "":
-                    msg = QMessageBox()
-                    msg.setText(f"Input cannot be empty for {param_check_box.text()}")
-                    msg.setWindowTitle("Error")
-                    msg.exec_()
-                    weight_input.setFocus()
-                    return
-                self.chosen_values[param_check_box.text()] = int(weight_input.text())
-        self.callback(self.chosen_values)
-        self.close()
-
-    def update_params(self):
-        for param_check_box, weight_input in self.params:
-            if param_check_box.text() in self.chosen_values:
-                param_check_box.setChecked(True)
-                weight_input.setText(str(self.chosen_values[param_check_box.text()]))
-            else:
-                param_check_box.setChecked(False)
-                weight_input.clear()
