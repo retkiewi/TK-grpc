@@ -8,6 +8,7 @@ class Model:
         self.chosen_weights = {}
         self.results = []
         self.results_presentation = ResultsPresentation.TOP_PICK
+        self.template_path = None
 
     def update_selected_directory(self, directory):
         self.selected_directory = directory
@@ -24,6 +25,11 @@ class Model:
     def update_results_presentation(self, index: int):
         self.results_presentation = [p for p in ResultsPresentation][index]
         print(self.results_presentation)
+
+
+    def update_template_path(self, path):
+        self.template_path = path
+        print(self.template_path)
 
     def update_results(self, path: str):
         self.results.append(path)

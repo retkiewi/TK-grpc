@@ -4,12 +4,17 @@ from utils import DirWalker, send_request
 from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
 from .filter_selector_widget import FilterSelectorWidget
+from .filter_selector_widget import ParametersWindow
 from gui.parameter_windows.select_animal_window import SelectAnimalWindow
 from gui.parameter_windows.select_format_window import SelectFormatWindow
 from .parameter_windows.select_body_window import SelectBodyWindow
 from .parameter_windows.select_style_window import SelectStyleWindow
 from .similar_image_widget import SimilarImageWidget
 from .select_directory_widget import SelectDirectoryWidget
+from .path_template_widget import PathTemplateWidget
+from .format_parameters_window import FormatParametersWindow
+
+
 
 
 class Window(QMainWindow):
@@ -21,6 +26,8 @@ class Window(QMainWindow):
         self.widgets = []
         form_widget = SelectDirectoryWidget(parent=self, callback=self.model.update_selected_directory)
         self.layout.addWidget(form_widget)
+        select_template_path_widget = PathTemplateWidget(parent=self, callback=self.model.update_template_path)
+        self.layout.addWidget(select_template_path_widget)
         self.add_filter_selectors()
         paste_image_widget = SimilarImageWidget(parent=self, callback=lambda x: self.model.update_filters('similar', x))
         self.layout.addWidget(paste_image_widget)
