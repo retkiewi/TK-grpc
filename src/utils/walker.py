@@ -9,6 +9,6 @@ class DirWalker:
     def walk(self):
         for root, _, files in os.walk(self.search_path):
             for filename in files:
-                filepath = os.path.join(root, filename)
+                filepath = "/".join([root, filename])
                 self.handler(filepath)
 

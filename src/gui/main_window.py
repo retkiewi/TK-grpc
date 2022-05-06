@@ -1,5 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QComboBox
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QComboBox, QPushButton, QWidget
 
+from utils import DirWalker, send_request
 from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
 from .filter_selector_widget import FilterSelectorWidget
@@ -24,6 +25,10 @@ class Window(QMainWindow):
         paste_image_widget = SimilarImageWidget(parent=self, callback=lambda x: self.model.update_filters('similar', x))
         self.layout.addWidget(paste_image_widget)
         self.combo_box = self.add_results_presentation_selector()
+        btn = QPushButton("Run", parent=self)
+        btn.setGeometry(10, 450, 50, 30)
+        btn.clicked.connect(self.run)
+        self.layout.addWidget(btn)
         self.setLayout(self.layout)
         self.setWindowTitle("Image finder")
         self.show()
@@ -47,7 +52,7 @@ class Window(QMainWindow):
             'Style',
             SelectStyleWindow(lambda x: self.model.update_filters('style', x)),
             200,
-            True,
+            False,
             'style',
         )
         self.add_selector(
@@ -92,3 +97,47 @@ class Window(QMainWindow):
         except ValueError:
             weight = None
         self.model.update_weights(label, weight)
+
+    def run(self):
+        self.model.results = []
+        walker = DirWalker(self.model.selected_directory, self.send_and_process)
+        walker.walk()
+        print(self.model.results)
+
+    # def send_and_process(self, path):
+    #     chosen_filters = {k: v for k, v in self.model.chosen_filters.items() if k in self.get_enabled_components()}
+    #     for filter in chosen_filters:
+    #         result = send_request(filter, chosen_filters[filter], path)
+    #         if filter == 'format':
+    #             if not result:
+    #                 return
+    #         if filter == 'body':
+    #             if result > self.model.chosen_weights['body']:
+    #                 return
+    #         if filter == 'animal':
+    #             correct = False
+    #             for weight in result:
+    #                 if weight > self.model.chosen_weights['animal']:
+    #                     correct = True
+    #             if not correct:
+    #                 return
+    #         self.model.update_results(path)
+
+    def send_and_process(self, path):
+        chosen_filters = {k: v for k, v in self.model.chosen_filters.items() if k in self.get_enabled_components()}
+        results = send_request(chosen_filters, path)
+        for filter in results.keys():
+            if filter == 'animal':
+                correct = False
+                for weight in results['animal']:
+                    if weight > self.model.chosen_weights['animal']:
+                        correct = True
+                if not correct:
+                    return
+            if filter == 'format':
+                if not results['format']:
+                    return
+            if filter == 'body':
+                if results['body'] < self.model.chosen_weights['body']:
+                    return
+            self.model.update_results(path)

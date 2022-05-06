@@ -5,12 +5,13 @@ import core_animal_pb2_grpc
 
 from animal.animal_detection import detect_animals
 
-server_port = '[::]:50052'
+server_port = '[::]:50053'
 
 class Animal(core_animal_pb2_grpc.Animal):
     def detect_animals(self, target, *args, **kwargs):
         result = detect_animals(target.path)
-        results = [result[animal] or 0 for animal in target.animals]
+
+        results = [result[animal] if animal in result else 0 for animal in target.animals]
         return core_animal_pb2.AnimalResponse(return_values=results)
 
 

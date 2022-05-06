@@ -6,6 +6,7 @@ class Model:
         self.selected_directory = None
         self.chosen_filters = {}
         self.chosen_weights = {}
+        self.results = []
         self.results_presentation = ResultsPresentation.TOP_PICK
 
     def update_selected_directory(self, directory):
@@ -23,3 +24,6 @@ class Model:
     def update_results_presentation(self, index: int):
         self.results_presentation = [p for p in ResultsPresentation][index]
         print(self.results_presentation)
+
+    def update_results(self, path: str):
+        self.results.append(path)
