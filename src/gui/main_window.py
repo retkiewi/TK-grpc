@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QComboBox, QPushButton, QP
 
 from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
-from .filter_selector_widget import FilterSelectorWidget
 from gui.parameter_windows.select_animal_window import SelectAnimalWindow
 from gui.parameter_windows.select_format_window import SelectFormatWindow
 from utils import DirWalker, send_request
@@ -183,4 +182,4 @@ class Window(QMainWindow):
             if filter == 'style':
                 if not results['style']:
                     return
-            self.model.update_results(path, score)
+        self.model.update_results(path, score)
