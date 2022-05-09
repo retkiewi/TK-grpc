@@ -4,13 +4,20 @@ import core_body_pb2
 import core_body_pb2_grpc
 
 from body.face_detection import face_detection
+from body.hand_detection import hand_detection
+
 
 server_port = '[::]:50052'
 
 class Body(core_body_pb2_grpc.Body):
-    def detect_face(self, target, *args, **kwargs):
-        result = face_detection(target.path)
-        return core_body_pb2.FaceResponse(return_value=result)
+    def detect_body_parts(self, target, *args, **kwargs):
+        results = {}
+        if 'face' in target.types:
+            results['face'] = face_detection(target.path)
+        if 'hands' in target.types:
+            results['hands'] = hand_detection(target.path)
+        results = [results[part] if part in results else 0 for part in target.types]
+        return core_body_pb2.BodyResponse(return_values=results)
 
 
 def main():
