@@ -2,7 +2,7 @@
 
 
 ## Uruchamianie
-Program uruchamiamy poprzez odpalenie pythonowego modułu **src/core** - reszta komponentów jest uruchamiana razem z nim.
+Program uruchamiamy poprzez odpalenie bashowego skryptu **src/start.sh** - wszystkie komponenty i główny program są uruchamiane razem z nim.
 Wymagana wersja Pythona >= 3.9.
 
 ## Architektura
