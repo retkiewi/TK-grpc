@@ -25,7 +25,7 @@ class StyleDetector:
             data = self.ask_provider(fileobj)
 
         if data is None:
-            return Type.normal
+            return Type.photo
         
         image_type = data['imageType']
 

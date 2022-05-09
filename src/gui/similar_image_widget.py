@@ -6,14 +6,14 @@ class SimilarImageWidget(QWidget):
         super(SimilarImageWidget, self).__init__(parent)
         self.callback = callback
         self.paste_image_label = None
-        self.setGeometry(0, 300, 600, 100)
+        self.setGeometry(0, 300, 600, 80)
         self.layout = QVBoxLayout()
         self.add_paste_image_section()
         self.setLayout(self.layout)
 
     def add_paste_image_section(self):
         layout = QHBoxLayout()
-        button = QPushButton("Paste image from clipboard")
+        button = QPushButton("Paste template image from clipboard")
         button.clicked.connect(self.paste_image)
         self.paste_image_label = QLabel('No image selected')
         layout.addWidget(button)

@@ -32,7 +32,7 @@ class PathTemplateWidget(QWidget):
         super(PathTemplateWidget, self).__init__(parent)
         self.text_init = ""
         self.callback = callback
-        self.setGeometry(1, 250, 308, 100)
+        self.setGeometry(1, 350, 308, 80)
         layout = QHBoxLayout()
 
         self.btn = QPushButton("Select template image")
