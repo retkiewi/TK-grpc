@@ -8,7 +8,7 @@ class SelectBodyWindow(ParametersWindow):
 
     def __init__(self, callback, parent=None):
         self.parts = [
-            'hand', 'face'
+            'hands', 'face'
         ]
         self.check_boxes = []
         super(SelectBodyWindow, self).__init__(callback, parent)

@@ -40,10 +40,10 @@ class BodyClient(GrpcClient):
         super().__init__(address)
         self._stub = core_body_pb2_grpc.BodyStub(self._channel)
 
-    def ask_for_face(self, file_path: str) -> int:
-        request = core_body_pb2.FaceRequest(path=file_path)
-        response = self._stub.detect_face(request)
-        return response.return_value
+    def ask_for_body_parts(self, file_path: str, types: list[str]):
+        request = core_body_pb2.BodyRequest(path=file_path, types=types)
+        response = self._stub.detect_body_parts(request)
+        return response.return_values
 
 
 class AnimalClient(GrpcClient):
@@ -86,7 +86,7 @@ def send_request(filters, path):
             results['format'] = fc.ask_for_formats(path, filters['format'])
     if 'body' in filters:
         with BodyClient(addresses['body']) as bc:
-            results['body'] = bc.ask_for_face(path)
+            results['body'] = bc.ask_for_body_parts(path, filters['body'])
     if 'animal' in filters:
         with AnimalClient(addresses['animal']) as ac:
             results['animal'] = ac.ask_for_animals(path, filters['animal'])

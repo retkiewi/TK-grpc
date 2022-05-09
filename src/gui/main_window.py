@@ -176,8 +176,12 @@ class Window(QMainWindow):
                 if not results['format']:
                     return
             if filter == 'body':
-                score += results['body']
-                if results['body'] < self.model.chosen_weights['body']:
+                correct = False
+                for weight in results['body']:
+                    if weight > self.model.chosen_weights['body']:
+                        score += weight
+                        correct = True
+                if not correct:
                     return
             if filter == 'style':
                 if not results['style']:
