@@ -12,4 +12,4 @@ class DirWalker:
             for i, filename in enumerate(files):
                 filepath = "/".join([root, filename])
                 self.handler(filepath)
-                self.step_callback(int(i * 100 / len(files)))
+                self.step_callback(int((i+1) * 100 / len(files)))

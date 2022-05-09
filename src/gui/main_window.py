@@ -125,9 +125,9 @@ class Window(QMainWindow):
         elif self.model.results_presentation == ResultsPresentation.FIRST_PICK:
             paths = [results[0][0]]
         elif self.model.results_presentation == ResultsPresentation.TOP_10:
-            paths = [tup[0] for tup in sorted(results, key=lambda x: x[1])[:10]]
+            paths = [tup[0] for tup in sorted(results, key=lambda x: x[1], reverse=True)[:10]]
         elif self.model.results_presentation == ResultsPresentation.TOP_20:
-            paths = [tup[0] for tup in sorted(results, key=lambda x: x[1])[:20]]
+            paths = [tup[0] for tup in sorted(results, key=lambda x: x[1], reverse=True)[:20]]
         else:
             paths = [tup[0] for tup in results]
         group_box = QGroupBox()
