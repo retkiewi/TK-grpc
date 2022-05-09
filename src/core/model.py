@@ -31,5 +31,5 @@ class Model:
         self.template_path = path
         print(self.template_path)
 
-    def update_results(self, path: str):
-        self.results.append(path)
+    def update_results(self, path: str, score):
+        self.results.append((path, score))

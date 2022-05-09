@@ -7,7 +7,6 @@ class ResultsPresentation(Enum):
     ALL_FOUND = 2
     TOP_10 = 3
     TOP_20 = 4
-    TOP_50 = 5
 
 
 def get_name(result_presentation: ResultsPresentation):

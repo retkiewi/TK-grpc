@@ -1,26 +1,24 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QComboBox, QPushButton, QWidget
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QComboBox, QPushButton, QProgressBar, QLabel, \
+    QScrollArea, QGroupBox
 
-from utils import DirWalker, send_request
 from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
-from .filter_selector_widget import FilterSelectorWidget
-from .filter_selector_widget import ParametersWindow
 from gui.parameter_windows.select_animal_window import SelectAnimalWindow
 from gui.parameter_windows.select_format_window import SelectFormatWindow
+from utils import DirWalker, send_request
+from .filter_selector_widget import FilterSelectorWidget
 from .parameter_windows.select_body_window import SelectBodyWindow
 from .parameter_windows.select_style_window import SelectStyleWindow
-from .similar_image_widget import SimilarImageWidget
-from .select_directory_widget import SelectDirectoryWidget
 from .path_template_widget import PathTemplateWidget
-from .format_parameters_window import FormatParametersWindow
-
-
+from .select_directory_widget import SelectDirectoryWidget
+from .similar_image_widget import SimilarImageWidget
 
 
 class Window(QMainWindow):
     def __init__(self, model: Model):
         super().__init__()
-        self.setFixedSize(1000, 800)
+        self.setFixedSize(1000, 600)
         self.model = model
         self.layout = QVBoxLayout()
         self.widgets = []
@@ -33,9 +31,13 @@ class Window(QMainWindow):
         self.layout.addWidget(paste_image_widget)
         self.combo_box = self.add_results_presentation_selector()
         btn = QPushButton("Run", parent=self)
-        btn.setGeometry(10, 450, 50, 30)
+        btn.setGeometry(10, 480, 50, 30)
         btn.clicked.connect(self.run)
+        self.progress_bar = QProgressBar(parent=self)
+        self.progress_bar.setGeometry(80, 480, 300, 30)
         self.layout.addWidget(btn)
+        self.results = QScrollArea(self)
+        self.results.setGeometry(500, 10, 490, 580)
         self.setLayout(self.layout)
         self.setWindowTitle("Image finder")
         self.show()
@@ -88,7 +90,7 @@ class Window(QMainWindow):
         for pres in [p for p in ResultsPresentation]:
             combo_box.addItem(get_name(pres))
         combo_box.currentIndexChanged.connect(self.selection_change)
-        combo_box.setGeometry(10, 400, 100, 25)
+        combo_box.setGeometry(10, 420, 100, 25)
         self.layout.addWidget(combo_box)
         return combo_box
 
@@ -107,9 +109,36 @@ class Window(QMainWindow):
 
     def run(self):
         self.model.results = []
-        walker = DirWalker(self.model.selected_directory, self.send_and_process)
+        walker = DirWalker(
+            self.model.selected_directory,
+            self.send_and_process,
+            lambda x: self.progress_bar.setValue(x),
+        )
         walker.walk()
+        self.show_results()
         print(self.model.results)
+
+    def show_results(self):
+        results = self.model.results
+        if self.model.results_presentation == ResultsPresentation.TOP_PICK:
+            paths = [max(results, key=lambda x: x[1])[0]]
+        elif self.model.results_presentation == ResultsPresentation.FIRST_PICK:
+            paths = [results[0][0]]
+        elif self.model.results_presentation == ResultsPresentation.TOP_10:
+            paths = [tup[0] for tup in sorted(results, key=lambda x: x[1])[:10]]
+        elif self.model.results_presentation == ResultsPresentation.TOP_20:
+            paths = [tup[0] for tup in sorted(results, key=lambda x: x[1])[:20]]
+        else:
+            paths = [tup[0] for tup in results]
+        group_box = QGroupBox()
+        layout = QVBoxLayout()
+        for path in paths:
+            label = QLabel()
+            image = QPixmap(path)
+            label.setPixmap(image.scaledToWidth(460))
+            layout.addWidget(label)
+        group_box.setLayout(layout)
+        self.results.setWidget(group_box)
 
     # def send_and_process(self, path):
     #     chosen_filters = {k: v for k, v in self.model.chosen_filters.items() if k in self.get_enabled_components()}
@@ -133,11 +162,13 @@ class Window(QMainWindow):
     def send_and_process(self, path):
         chosen_filters = {k: v for k, v in self.model.chosen_filters.items() if k in self.get_enabled_components()}
         results = send_request(chosen_filters, path)
+        score = 0
         for filter in results.keys():
             if filter == 'animal':
                 correct = False
                 for weight in results['animal']:
                     if weight > self.model.chosen_weights['animal']:
+                        score += weight
                         correct = True
                 if not correct:
                     return
@@ -145,6 +176,7 @@ class Window(QMainWindow):
                 if not results['format']:
                     return
             if filter == 'body':
+                score += results['body']
                 if results['body'] < self.model.chosen_weights['body']:
                     return
-            self.model.update_results(path)
+            self.model.update_results(path, score)
