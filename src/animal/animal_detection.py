@@ -11,8 +11,6 @@ model_path = module_path / "model_weights.pth"
 
 
 def detect_animals(file_path):
-    print(os.getcwd())
-
     model = core.Model.load(model_path, animals)
     image = utils.read_image(file_path)
 

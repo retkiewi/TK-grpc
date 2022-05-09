@@ -4,7 +4,6 @@ from utils import DirWalker, send_request
 from core.model import Model
 from core.results_presentation import ResultsPresentation, get_name
 from .filter_selector_widget import FilterSelectorWidget
-from .filter_selector_widget import ParametersWindow
 from gui.parameter_windows.select_animal_window import SelectAnimalWindow
 from gui.parameter_windows.select_format_window import SelectFormatWindow
 from .parameter_windows.select_body_window import SelectBodyWindow
@@ -12,9 +11,6 @@ from .parameter_windows.select_style_window import SelectStyleWindow
 from .similar_image_widget import SimilarImageWidget
 from .select_directory_widget import SelectDirectoryWidget
 from .path_template_widget import PathTemplateWidget
-from .format_parameters_window import FormatParametersWindow
-
-
 
 
 class Window(QMainWindow):
@@ -146,5 +142,8 @@ class Window(QMainWindow):
                     return
             if filter == 'body':
                 if results['body'] < self.model.chosen_weights['body']:
+                    return
+            if filter == 'style':
+                if not results['style']:
                     return
             self.model.update_results(path)

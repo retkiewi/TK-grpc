@@ -6,8 +6,10 @@ import core_format_pb2_grpc
 import core_format_pb2
 import core_body_pb2_grpc
 import core_body_pb2
+import core_style_pb2_grpc
+import core_style_pb2
 
-addresses = {'format' : 'localhost:50051', 'body' : 'localhost:50052', 'animal' : 'localhost:50053'}
+addresses = {'format' : 'localhost:50051', 'body' : 'localhost:50052', 'animal' : 'localhost:50053', 'style' : 'localhost:50054'}
 
 
 class GrpcClient:
@@ -55,6 +57,17 @@ class AnimalClient(GrpcClient):
         return response.return_values
 
 
+class StyleClient(GrpcClient):
+    def __init__(self, address: str):
+        super().__init__(address)
+        self._stub = core_style_pb2_grpc.StyleStub(self._channel)
+
+    def ask_for_styles(self, file_path: str, desired_styles: list[str]):
+        request = core_style_pb2.StyleRequest(path=file_path, styles=desired_styles)
+        response = self._stub.check_style(request)
+        return response.return_value
+
+
 # def send_request(filter, values, path):
 #     if filter == 'format':
 #         with FormatClient(addresses['format']) as fc:
@@ -77,6 +90,9 @@ def send_request(filters, path):
     if 'animal' in filters:
         with AnimalClient(addresses['animal']) as ac:
             results['animal'] = ac.ask_for_animals(path, filters['animal'])
+    if 'style' in filters:
+        with StyleClient(addresses['style']) as sc:
+            results['style'] = sc.ask_for_styles(path, filters['style'])
     return results
 
 
@@ -95,3 +111,7 @@ if __name__ == '__main__':
     srv_addr = 'localhost:50053'
     with AnimalClient(srv_addr) as ac:
         print(ac.ask_for_animals('animal\\elephant.jpg', ["elephant"]))
+
+    srv_addr = 'localhost:50054'
+    with StyleClient(srv_addr) as ac:
+        print(sc.ask_for_styles('animal\\elephant.jpg', ["clipart"]))
