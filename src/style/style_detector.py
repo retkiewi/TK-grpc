@@ -3,9 +3,9 @@ import enum
 
 
 class Type(enum.Enum):
-    line = enum.auto()
-    clipart = enum.auto()
-    normal = enum.auto()
+    line = 'line drawing'
+    clipart = 'clip art'
+    photo = 'photo'
 
 
 class StyleDetector:
@@ -20,7 +20,7 @@ class StyleDetector:
         if self._sub_key is None:
             raise ValueError('Subscription key file was not read properly.')
 
-    def detect_style(self, file_path: str) -> int:
+    def detect_style(self, file_path: str):
         with open(file_path, 'rb') as fileobj:
             data = self.ask_provider(fileobj)
 
@@ -34,7 +34,7 @@ class StyleDetector:
         elif image_type['clipArtType'] >= 2:
             return Type.clipart
         else:
-            return Type.normal
+            return Type.photo
 
     def ask_provider(self, fileobj) -> dict | None:
         headers = {'Ocp-Apim-Subscription-Key': f'{self._sub_key}'}

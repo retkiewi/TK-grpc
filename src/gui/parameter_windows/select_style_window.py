@@ -8,7 +8,7 @@ class SelectStyleWindow(ParametersWindow):
 
     def __init__(self, callback, parent=None):
         self.types = [
-            'photo', 'clip art', 'line drawing', 'GIF'
+            'photo', 'clip art', 'line drawing'
         ]
         self.check_boxes = []
         super(SelectStyleWindow, self).__init__(callback, parent)
