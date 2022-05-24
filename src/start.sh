@@ -5,6 +5,7 @@ components=(
     animal
     body
     format
+    style
 )
 
 components_num=${#components[@]}
