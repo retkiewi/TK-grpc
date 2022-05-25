@@ -19,12 +19,3 @@ for filepath in `ls $protos_dir/*.proto` ; do
 done
 
 echo "Done!"
-
-
-# animal model weights
-
-echo "Pulling large files from git..."
-
-git lfs pull
-
-echo "Done!"

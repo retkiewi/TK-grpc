@@ -1,40 +1,11 @@
 #!/bin/bash -e
 
-# To add component just append names to the components array
-components=(
-    animal
-    body
-    format
-)
-
 components_num=${#components[@]}
-shell_pids=()
-PYTHON3=$(which python3)
+python3 -m pip install -r ../requirements.txt
+./build.sh
 
-
-on_exit () {
-    for PID in ${shell_pids[@]} ; do
-        /bin/kill $(ps -o pid= --ppid $PID)
-    done
-    
-    exit 0
-}
-trap on_exit SIGINT
-
-for i in `seq 1 $components_num` ;
-do
-    comp_name=${components[$(($i - 1))]}
-    echo "Running... ${comp_name}"
-
-    # change it to sth else to run differently
-    start_command="$PYTHON3 -m $comp_name 2>&1"
-
-    bash -c "$start_command | sed -e \"s/^/[$comp_name] /\"" 2> /dev/null &
-    shell_pids[$i]=$!
-    echo "Done"
-done
-echo "All started!"
-
-$PYTHON3 -m core
-
-on_exit
+gnome-terminal -- python3 -m style
+gnome-terminal -- python3 -m body
+gnome-terminal -- python3 -m format
+gnome-terminal -- python3 -m animal
+gnome-terminal -- python3 -m core
