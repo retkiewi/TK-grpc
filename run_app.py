@@ -4,14 +4,10 @@ import os
 
 if platform == "linux" or platform == "linux32":
     call(["cd", ".\\src"])
-    call(["chmod","+x","build.sh"])
-    call("./build.sh")
     call(["chmod","+x","start.sh"])
     call("./start.sh")
 elif platform == "win32":
     proto_path = "\\src\\protos"
-    print(os.getcwd())
-
     for filename in os.listdir(os.getcwd() + proto_path):
         f = os.path.join(proto_path, filename)
         print( f"Generating grpc files for {filename}")
