@@ -61,6 +61,14 @@ def resize_ui(sender, app_data):
     # render font at higher res and downsample, better then upsampling
     dpg.set_global_font_scale(1 + (h - initial_height) / (4 * initial_height) - 0.5)
 
+    nodes=dpg.get_item_children("node_editor")[1]
+    for n in nodes:
+        print(n)
+        #dpg.set_item_width("width_control",1000)
+        dpg.get_item_width(n)
+        #dpg.set_item_width(n,dpg.get_item_width(n)+10)
+
+
 
 def show_popup(sender, app_data):
     if app_data[0] == 1:
@@ -191,7 +199,7 @@ def add_node(sender, app, u):
                         dpg.add_button(label="File Selector", user_data=dpg.last_container(),
                                        callback=lambda s, a, u: dpg.configure_item(u, show=True), indent=280)
 
-            dpg.add_spacer(height=20)
+            dpg.add_spacer(label="spacer",height=20,width=150)
             with dpg.group(xoffset=120, horizontal=True, show=True):
                 dpg.add_text("Executor", label="Executor")
                 dpg.add_combo(["RabbitMQ", "GRPC"], width=150, default_value="GRPC")
@@ -234,6 +242,9 @@ def execute_sequence(query_executor):
         children = dpg.get_item_children(next)[1]
         executor_type = 0
         for id in children:
+            if(dpg.get_item_label(id)=="spacer"):
+                continue
+
             id = dpg.get_item_children(id)
             id0 = id[1][0]
             id = id[1][1]
@@ -362,7 +373,7 @@ if __name__ == '__main__':
                              tracked=True) as node_editor:
             with dpg.node(label="Input", tag="input"):
                 with dpg.node_attribute(tag="input_param", attribute_type=dpg.mvNode_Attr_Output):
-                    dpg.add_input_text(label="root path", width=150, tag="root_path", default_value='D:\\repos\\TK2\\TK\\ImageDownloader\\downloads\\cocker spaniel')
+                    dpg.add_input_text(label="root path", width=150, tag="root_path")
 
     dpg.bind_font(default_font)
     dpg.set_viewport_resize_callback(resize_ui)
@@ -373,7 +384,7 @@ if __name__ == '__main__':
     dpg.set_primary_window("main_window", True)
 
     # debug
-    # dpg.show_item_registry()
+    dpg.show_item_registry()
 
     dpg.start_dearpygui()
     dpg.destroy_context()
