@@ -192,6 +192,11 @@ def add_node(sender, app, u):
                             dpg.add_file_extension(".*", color=(255, 255, 255, 255))
                         dpg.add_button(label="File Selector", user_data=dpg.last_container(),
                                        callback=lambda s, a, u: dpg.configure_item(u, show=True), indent=280)
+                elif v_filtered[0] == "multichoice":
+                    with dpg.group(xoffset=120, horizontal=False, show=show_input):
+                        dpg.add_text(k, label="multichoice")
+                        for i in v_filtered[1:]:
+                            dpg.add_checkbox(label=i)
 
             dpg.add_spacer(label="spacer",height=20,width=150)
             with dpg.group(xoffset=120, horizontal=True, show=True):
@@ -239,11 +244,19 @@ def execute_sequence(query_executor):
             if(dpg.get_item_label(id)=="spacer"):
                 continue
 
+            multichoice_ids=dpg.get_item_children(id)[1][1:]
             id = dpg.get_item_children(id)
             id0 = id[1][0]
             id = id[1][1]
 
-            if dpg.get_item_label(id0) == "comparator":
+            if dpg.get_item_label(id0)=="multichoice":
+                checkboxes=multichoice_ids
+                data[dpg.get_item_label(id0)]=[]
+                for c in checkboxes:
+                    if dpg.get_value(c)==True:
+                        data[dpg.get_item_label(id0)].append(dpg.get_item_label(c))
+
+            elif dpg.get_item_label(id0) == "comparator":
                 data[dpg.get_item_label(id0)] = comparator_dict_inv[dpg.get_value(id)]
             else:
                 data[dpg.get_item_label(id0)] = dpg.get_value(id)

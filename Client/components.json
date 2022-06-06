@@ -34,15 +34,19 @@
     "threshold": ["float","equal"]
   },
 
-  "Animal": {
-    "type": ["choice","tiger","elephant","panda"]
+  "Animals": {
+    "type": ["multichoice","tiger","elephant","panda"]
   },
 
-  "Style": {
-    "type": ["choice","photo","clip art","line drawing"]
+  "Styles": {
+    "type": ["multichoice","photo","clip art","line drawing"]
   },
 
   "Body": {
-    "type": ["choice","hands","face"]
+    "type": ["multichoice","hands","face"]
+  },
+
+  "Formats": {
+    "type": ["multichoice",".jpeg",".jpeg2000",".gif", ".bmp",".png",".webp",".ico",".img",".xcf","cgm",".svg",".blend",".xaml",".pdf",".jpg"]
   }
 }
