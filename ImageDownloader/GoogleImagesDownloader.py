@@ -5,9 +5,7 @@ from google_images_download import google_images_download
 downloader = google_images_download.googleimagesdownload()
 
 search_queries = [
-    'faces', 'face', 'human face smile', 'dogs', 'corgi', 'golden retriever', 'labrador', 'dalmatian', 'cocker spaniel',
-    'German Shepherd', 'Jack Russell Terrier', 'color', 'red pepper', 'green forest', 'dog breed', 'colorful vegetable',
-    'similarity'
+    'hand'
 ]
 
 

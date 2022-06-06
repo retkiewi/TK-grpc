@@ -8,7 +8,7 @@ from style.style_detector import StyleDetector
 server_port = '[::]:50054'
 
 class Style(core_style_pb2_grpc.Style):
-    def check_style(self, target, *args, **kwargs):
+    def get_result(self, target, *args, **kwargs):
         style_detector = StyleDetector()
         result = style_detector.detect_style(target.path).value in target.styles
         return core_style_pb2.StyleResponse(return_value=result)

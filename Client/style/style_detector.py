@@ -14,9 +14,10 @@ class StyleDetector:
     def __init__(self):
         self._sub_key = None
 
-        with open('..skey', 'r') as f:
-            self._sub_key = f.read().replace('\n', '')
-        
+        #with open('./skey', 'r') as f:
+        #    self._sub_key = f.read().replace('\n', '')
+        self._sub_key = "eaab1276fd524fe3897a683af0af3f47"
+
         if self._sub_key is None:
             raise ValueError('Subscription key file was not read properly.')
 

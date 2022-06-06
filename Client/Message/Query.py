@@ -160,9 +160,9 @@ class BodyQuery(GRPCMessage):
         return lambda path: BodyRequest(path=path, types=self.params['types'])
 
     def approved(self, result) -> bool:
-        comparator = get_comparator(self.params['comparator'])
-        threshold = self.params('threshold')
-        return any(map(lambda val: comparator(val, threshold), result))
+        comparator = get_comparator('>', 0)
+        min_weight = float(self.params['minimal weight'])
+        return any(map(lambda val: comparator(val, min_weight), result))
 
 
 class AnimalQuery(GRPCMessage):
@@ -177,9 +177,9 @@ class AnimalQuery(GRPCMessage):
         return lambda path: AnimalRequest(path=path, animals=self.params['animals'])
 
     def approved(self, result) -> bool:
-        comparator = get_comparator(self.params['comparator'])
-        threshold = self.params('threshold')
-        return any(map(lambda val: comparator(val, threshold), result))
+        comparator = get_comparator('>', 0)
+        min_weight = float(self.params['minimal weight'])
+        return any(map(lambda val: comparator(val, min_weight), result))
 
 
 class StyleQuery(GRPCMessage):

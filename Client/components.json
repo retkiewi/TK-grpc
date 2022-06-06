@@ -35,7 +35,8 @@
   },
 
   "Animals": {
-    "animals": ["multichoice","tiger","elephant","panda"]
+    "animals": ["multichoice","tiger","elephant","panda"],
+    "minimal weight": ["float","minimal_weight"]
   },
 
   "Styles": {
@@ -43,7 +44,8 @@
   },
 
   "Body": {
-    "type": ["multichoice","hands","face"]
+    "types": ["multichoice","hands","face"],
+    "minimal weight": ["float","minimal weight"]
   },
 
   "Formats": {
