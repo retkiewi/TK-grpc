@@ -378,7 +378,7 @@ if __name__ == '__main__':
     dpg.set_primary_window("main_window", True)
 
     # debug
-    dpg.show_item_registry()
+    #dpg.show_item_registry()
 
     dpg.start_dearpygui()
     dpg.destroy_context()
