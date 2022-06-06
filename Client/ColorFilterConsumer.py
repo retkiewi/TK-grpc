@@ -4,7 +4,7 @@ import traceback
 
 from Client import GRPCQueryListener
 from Logger.CustomLogFormatter import CustomLogFormatter
-from ColorFilter.ColorFilter import process_request
+from ColorFilter.ColorFilter import process_request, process_single
 from Client import RabbitMQQueryListener
 from Message import RabbitMQResponse
 

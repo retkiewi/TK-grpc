@@ -19,8 +19,6 @@ def get_pixel_size(path):
 def get_cm_size(path):
     width, height = imagesize.get(path)
     widthDPI, heightDPI = imagesize.getDPI(path)
-    print(width, height)
-    print(widthDPI, heightDPI)
     return [width / widthDPI * INCH2CM, height / heightDPI * INCH2CM]
 
 
