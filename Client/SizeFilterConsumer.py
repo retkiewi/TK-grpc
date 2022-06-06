@@ -23,7 +23,10 @@ QUEUE_CONFIG_NAME = 'size'
 
 class SizeGRPC(Size):
     def get_result(self, target, *args, **kwargs):
-        return SizeResponse(retun_value=process_single(target))
+        logger.info(f'recieved request for path {target.path}')
+        res = process_single(target)
+        logger.info(f'{res}: {type(res)}')
+        return SizeResponse(return_value=res)
 
 
 def setup_rmq():

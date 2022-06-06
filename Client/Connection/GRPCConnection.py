@@ -1,17 +1,17 @@
 import grpc
 
-from configparser import ConfigParser, ExtendedInterpolation
+from configparser import ConfigParser
 from Connection.GRPCStubProvider import GRPCStubProvider
 
 
 class GRPCConnection:
     @staticmethod
     def from_config(topic):
-        config = ConfigParser(interpolation=ExtendedInterpolation())
+        config = ConfigParser()
         config.read('config.ini')
 
         return GRPCConnection(
-            topic.name,
+            topic,
             config['GRPC'].get(topic),
         )
 

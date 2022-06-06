@@ -27,8 +27,16 @@ class SizeQuery(RabbitMQMessage, GRPCMessage):
         return 'size'
 
     def grpc(self):
-        return lambda path: SizeRequest(path, self.params['unit'], self.params['comparator'],
-                                                      self.params[self.params['unit']])
+        values_raw = self.params[self.params['unit']]
+        values = values_raw if isinstance(values_raw, list) else [float(values_raw)]
+        for (k,v) in self.params.items():
+            print(f'{k}:{type(v)}')
+        return lambda path: SizeRequest(
+            path=path,
+            unit=self.params['unit'],
+            comparator=self.params['comparator'],
+            values=values
+        )
 
     def approved(self, result) -> bool:
         return result
