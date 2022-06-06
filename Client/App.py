@@ -193,8 +193,8 @@ def add_node(sender, app, u):
                         dpg.add_button(label="File Selector", user_data=dpg.last_container(),
                                        callback=lambda s, a, u: dpg.configure_item(u, show=True), indent=280)
                 elif v_filtered[0] == "multichoice":
-                    with dpg.group(xoffset=120, horizontal=False, show=show_input):
-                        dpg.add_text(k, label="multichoice")
+                    with dpg.group(xoffset=120, horizontal=False, show=show_input, label="multichoice"):
+                        dpg.add_text(k, label=k)
                         for i in v_filtered[1:]:
                             dpg.add_checkbox(label=i)
 
@@ -244,12 +244,13 @@ def execute_sequence(query_executor):
             if(dpg.get_item_label(id)=="spacer"):
                 continue
 
+            label=dpg.get_item_label(id)
             multichoice_ids=dpg.get_item_children(id)[1][1:]
             id = dpg.get_item_children(id)
             id0 = id[1][0]
             id = id[1][1]
 
-            if dpg.get_item_label(id0)=="multichoice":
+            if label=="multichoice":
                 checkboxes=multichoice_ids
                 data[dpg.get_item_label(id0)]=[]
                 for c in checkboxes:
