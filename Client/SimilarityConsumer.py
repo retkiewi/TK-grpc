@@ -2,8 +2,8 @@ import logging
 import sys
 import traceback
 
-from core_similarity_pb2 import SimilarityResponse
-from core_similarity_pb2_grpc import Similarity, add_SimilarityServicer_to_server as add_Similarity
+from core_similarities_pb2 import SimilaritiesResponse
+from core_similarities_pb2_grpc import Similarities, add_SimilaritiesServicer_to_server as add_Similarity
 
 from Client import GRPCQueryListener
 from Client import RabbitMQQueryListener
@@ -22,10 +22,10 @@ SERVICE_NAME = "similarity_service"
 QUEUE_CONFIG_NAME = 'similarity'
 
 
-class SimilarityGRPC(Similarity):
+class SimilarityGRPC(Similarities):
     def get_result(self, target, *args, **kwargs):
         logger.info(f'recieved request for path {target.path}')
-        return SimilarityResponse(return_value=process_single(target, logger))
+        return SimilaritiesResponse(return_value=process_single(target, logger))
 
 
 def setup_rmq():
