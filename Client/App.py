@@ -126,7 +126,7 @@ def file_selector_callback(s, a, u):
 
 def add_node(sender, app, u):
     pos_x = dpg.get_item_pos("popup")[0] + scroll_add[0]
-    pos_y = dpg.get_item_pos("popup")[1] + scroll_add[1]
+    pos_y = dpg.get_item_pos("popup")[1] + scroll_add[1]-dpg.get_item_height("popup")
     with dpg.node(label=u[0], pos=[pos_x, pos_y], parent="node_editor") as node_id:
         component = u[1]
         with dpg.node_attribute():
@@ -191,9 +191,11 @@ def add_node(sender, app, u):
                         dpg.add_button(label="File Selector", user_data=dpg.last_container(),
                                        callback=lambda s, a, u: dpg.configure_item(u, show=True), indent=280)
 
+            dpg.add_spacer(height=20)
             with dpg.group(xoffset=120, horizontal=True, show=True):
                 dpg.add_text("Executor", label="Executor")
                 dpg.add_combo(["RabbitMQ", "GRPC"], width=150, default_value="GRPC")
+
 
         with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Output):
             pass
