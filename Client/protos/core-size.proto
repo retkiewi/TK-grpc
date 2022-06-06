@@ -9,7 +9,7 @@ message SizeRequest {
     string unit = 2;
     string comparator = 3;
     optional float threshold = 4;
-    repeated int32 values = 5;
+    repeated float values = 5;
 }
 
 message SizeResponse {
