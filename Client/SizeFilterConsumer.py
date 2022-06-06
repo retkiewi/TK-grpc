@@ -2,8 +2,9 @@ import logging
 import sys
 import traceback
 
-from Client.Client import GRPCQueryListener
-from Client.Message.Gen import Size, SizeResponse, add_Size
+from Client import GRPCQueryListener
+from core_size_pb2_grpc import Size, add_SizeServicer_to_server as add_Size
+from core_size_pb2 import SizeResponse
 from Logger.CustomLogFormatter import CustomLogFormatter
 from SizeFilter.SizeFilter import process_request, process_single
 from Client import RabbitMQQueryListener
@@ -45,7 +46,7 @@ def setup_rmq():
 
 def setup_grpc():
     consumer = GRPCQueryListener()
-    consumer.listen(lambda server: add_Size(SizeGRPC(), server))
+    consumer.listen(lambda server: add_Size(SizeGRPC(), server), QUEUE_CONFIG_NAME)
 
 
 if __name__ == '__main__':

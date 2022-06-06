@@ -2,13 +2,13 @@ import json
 from abc import ABC
 
 import pika
-from configparser import ConfigParser, ExtendedInterpolation
+from configparser import ConfigParser
 
 
 class RabbitMQConnection:
     @staticmethod
     def from_config():
-        config = ConfigParser(interpolation=ExtendedInterpolation())
+        config = ConfigParser()
         config.read('config.ini')
 
         return RabbitMQConnection(

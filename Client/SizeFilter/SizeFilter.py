@@ -3,8 +3,6 @@ import json
 import imagesize
 from Utils.Utils import get_comparator
 
-from Client.Message.Gen import SizeRequest
-
 INCH2CM = 0.393701
 
 
@@ -49,7 +47,7 @@ def process_request(body: str):
     return filter(lambda path: is_compliant(path, metric, comparator, reference), paths)
 
 
-def process_single(query: SizeRequest):
+def process_single(query):
 
     metric = get_metric(query.unit)
     comparator = get_comparator(query.comparator, query.threshold)

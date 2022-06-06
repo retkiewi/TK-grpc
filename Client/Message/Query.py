@@ -4,7 +4,11 @@ from Logger.CustomLogFormatter import CustomLogFormatter
 from Message.MessageAbstracts import *
 
 from Utils.Utils import get_comparator
-from Gen import SizeRequest, FormatRequest, BodyRequest, StyleRequest, AnimalRequest
+from core_size_pb2 import SizeRequest
+from core_animal_pb2 import AnimalRequest
+from core_format_pb2 import FormatRequest
+from core_style_pb2 import StyleRequest
+from core_body_pb2 import BodyRequest
 
 logger = logging.getLogger("Query")
 logger.setLevel(logging.DEBUG)

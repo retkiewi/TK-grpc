@@ -1,3 +1,5 @@
+from configparser import ConfigParser
+
 import grpc
 from Connection import GRPCConnection
 from Message.MessageAbstracts import GRPCMessage
@@ -16,10 +18,12 @@ class GRPCQueryDispatcher:
 
 
 class GRPCQueryListener:
-    def listen(self, add_func, server_port):
+    def listen(self, add_func, server_config_name):
         server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=10))
         add_func(server)
-        server.add_insecure_port(server_port)
+        config = ConfigParser()
+        config.read('config.ini')
+        server.add_insecure_port(config['GRPC'].get(server_config_name))
         server.start()
         server.wait_for_termination()
 

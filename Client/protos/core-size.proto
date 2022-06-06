@@ -8,7 +8,7 @@ message SizeRequest {
     string path = 1;
     string unit = 2;
     string comparator = 3;
-    optional float threshold = 4 [default = 0.0];
+    optional float threshold = 4;
     repeated int32 values = 5;
 }
 
