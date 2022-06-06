@@ -1,0 +1,5 @@
+animals = [
+    'tiger',
+    'elephant',
+    'panda'
+]

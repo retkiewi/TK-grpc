@@ -2,7 +2,7 @@
 syntax = "proto3";
 
 service Format {
-    rpc check_format(FormatRequest) returns (FormatResponse) {};
+    rpc get_result(FormatRequest) returns (FormatResponse) {};
 }
 
 message FormatRequest {

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 service Animal {
-  rpc detect_animals(AnimalRequest) returns (AnimalResponse) {};
+  rpc get_result(AnimalRequest) returns (AnimalResponse) {};
 }
 
 message AnimalRequest {
@@ -10,5 +10,5 @@ message AnimalRequest {
 }
 
 message AnimalResponse {
-  repeated float return_values = 1;
+  repeated float return_value = 1;
 }
