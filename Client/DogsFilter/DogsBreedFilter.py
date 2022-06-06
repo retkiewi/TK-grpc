@@ -1,6 +1,8 @@
+from sympy import true
 from DogsFilter.lib.classifier import classifier 
 import json
 import os
+
 
 def run_classifier(path):
 
@@ -12,34 +14,48 @@ def run_classifier(path):
       return image_classification
 
 
-def check_if_dog(paths):
+def check_if_dog(path):
       filtered_paths = []
       with open(os.path.dirname(__file__) + "/lib/dognames.txt") as f:
             lines = f.read().splitlines() 
-            for path in paths:
-                  classification = run_classifier(path).lower()
-                  if classification in lines:
-                        filtered_paths.append(path)
-      return filtered_paths
+            classification = run_classifier(path).lower()
+            if classification in lines:
+                  return True
+      return False
 
 
-def check_breed(paths, breed):
+def check_breed(path, breed):
       filtered_paths = []
-      for path in paths:
-            classification = run_classifier(path)
-            if breed in classification:
-                  filtered_paths.append(path)
-      return filtered_paths
+      classification = run_classifier(path)
+      if breed in classification:
+            return True
+      return False
 
+def get_filter(breed):
+      if breed.lower() == "any":
+            return lambda path, breed :check_if_dog(path)
+      else: 
+            return lambda path, breed :check_breed(path, breed)
+
+
+def is_compliant(path, filter_method, breed):
+      value = filter_method(path, breed)
+      print(f'Checked({value}) has type: {type(value)}')
+      return value
 
 def process_request(body):
       body = json.loads(body)
       params = body["params"]
-
-      if params["breed"].lower() == "any":
-            result = check_if_dog(paths=body["paths"])
-      else: 
-            result = check_breed(paths=body["paths"], breed = params["breed"])
-      return result
+      breed = params["breed"].lower()
+      filter_method = get_filter(breed)
+      paths=body["paths"]
+      return [*filter(lambda path: is_compliant(path, filter_method, breed), paths)]
 
 
+
+def process_single(query):
+    breed = query.breed
+    filter_method = get_filter(breed)
+    path = query.path
+    res = is_compliant(path, filter)
+    return res
