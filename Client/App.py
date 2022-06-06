@@ -44,6 +44,7 @@ comparator_dict = {">": "greater than", ">=": "greater/equal than", "<": "less t
                    "==": "equal"}
 comparator_dict_inv = {v: k for k, v in comparator_dict.items()}
 
+
 class Component:
     def __init__(self, label):
         self.label = label
@@ -190,6 +191,10 @@ def add_node(sender, app, u):
                         dpg.add_button(label="File Selector", user_data=dpg.last_container(),
                                        callback=lambda s, a, u: dpg.configure_item(u, show=True), indent=280)
 
+            with dpg.group(xoffset=120, horizontal=True, show=True):
+                dpg.add_text("Executor", label="Executor")
+                dpg.add_combo(["RabbitMQ", "GRPC"], width=150, default_value="GRPC")
+
         with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Output):
             pass
     return node_id
@@ -225,6 +230,7 @@ def execute_sequence(query_executor):
     while (True):
         data = {}
         children = dpg.get_item_children(next)[1]
+        executor_type = 0
         for id in children:
             id = dpg.get_item_children(id)
             id0 = id[1][0]
@@ -235,11 +241,18 @@ def execute_sequence(query_executor):
             else:
                 data[dpg.get_item_label(id0)] = dpg.get_value(id)
 
+            if dpg.get_item_label(id0) == "Executor":
+                field_val = dpg.get_value(id)
+                if (field_val == "RabbitMQ"):
+                    executor_type = 1
+                else:
+                    executor_type = 2
+
         value = (QueryBuilder()
                  .query_type(dpg.get_item_label(dpg.get_item_parent(next)))
                  .data(data)
                  .paths(files)
-                 .executor(Executor.RabbitMQ)
+                 .executor(executor_type)
                  .build())
         parsed.append(value)
         try:
@@ -319,6 +332,7 @@ if __name__ == '__main__':
         dpg.add_key_press_handler(key=46, callback=delete_nodes)
 
     query_executor = QueryExecutor()
+
 
     def execution_callback():
         execute_sequence(query_executor)
