@@ -1,10 +1,15 @@
 import logging
+import sys
 import traceback
 
+from Client import GRPCQueryListener
 from Logger.CustomLogFormatter import CustomLogFormatter
 from ColorFilter.ColorFilter import process_request
 from Client import RabbitMQQueryListener
 from Message import RabbitMQResponse
+
+from core_color_pb2_grpc import Color, add_ColorServicer_to_server as add_Color
+from core_color_pb2 import ColorResponse
 
 logger = logging.getLogger("ColorFilterConsumer")
 logger.setLevel(logging.DEBUG)
@@ -16,8 +21,12 @@ logger.addHandler(ch)
 SERVICE_NAME = 'color_service'
 QUEUE_CONFIG_NAME = 'colors'
 
+class ColorGRPC(Color):
+    def get_result(self, target, *args, **kwargs):
+        logger.info(f'recieved request for path {target.path}')
+        return ColorResponse(return_value=process_single(target))
 
-if __name__ == '__main__':
+def setup_rmq():
     logger.info("Starting ColorFilterConsumer")
     consumer = RabbitMQQueryListener(QUEUE_CONFIG_NAME)
     logger.info("ColorFilterConsumer started successfully")
@@ -33,3 +42,13 @@ if __name__ == '__main__':
         consumer.respond(resp)
 
     consumer.listen(callback)
+
+def setup_grpc():
+    consumer = GRPCQueryListener()
+    consumer.listen(lambda server: add_Color(ColorGRPC(), server), QUEUE_CONFIG_NAME)
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2 or sys.argv[1] == 'rmq':
+        setup_rmq()
+    else:
+        setup_grpc()

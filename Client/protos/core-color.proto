@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+service Color {
+    rpc get_result(ColorRequest) returns (ColorResponse) {};
+}
+
+message ColorRequest {
+    string path = 1;
+    string system = 2;
+    repeated float color = 3;
+    string metric = 4;
+    string comparator = 5;
+    optional float threshold = 6;
+    optional float percent_threshold = 7;
+    optional float tolerance = 8;
+}
+
+message ColorResponse {
+    bool return_value = 1;
+}
