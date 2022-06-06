@@ -7,8 +7,8 @@ service Faces {
 message FacesRequest {
     string path = 1;
     string type = 2;
-    optional string faces = 3;
-    optional string smiles = 4;
+    optional int32 faces = 3;
+    optional int32 smiles = 4;
     string comparator = 5;
     optional float threshold = 6;
 }

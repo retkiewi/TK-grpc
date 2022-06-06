@@ -45,7 +45,7 @@ class QueryBuilder:
             'Format': FormatQuery(self.__query_paths, self.__query_data, self.__executor),
             'Body': BodyQuery(self.__query_paths, self.__query_data, self.__executor),
             'Animal': AnimalQuery(self.__query_paths, self.__query_data, self.__executor),
-            'Style': StyleQuery(self.__query_paths, self.__query_data, self.__executor)
+            'Styles': StyleQuery(self.__query_paths, self.__query_data, self.__executor)
         }[self.__query_type]
 
 

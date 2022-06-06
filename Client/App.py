@@ -2,12 +2,9 @@ import glob
 import json
 import logging
 import os
-import threading
-from time import sleep
 
 import dearpygui.dearpygui as dpg
 
-from Message.Executor import Executor
 from Logger.CustomLogFormatter import CustomLogFormatter
 from Utils.QueryUtils import QueryBuilder, QueryExecutor
 
@@ -380,7 +377,7 @@ if __name__ == '__main__':
                              tracked=True) as node_editor:
             with dpg.node(label="Input", tag="input"):
                 with dpg.node_attribute(tag="input_param", attribute_type=dpg.mvNode_Attr_Output):
-                    dpg.add_input_text(label="root path", width=150, tag="root_path")
+                    dpg.add_input_text(label="root path", width=150, tag="root_path", default_value="D:\\repos\\TK2\\TK\\ImageDownloader\\downloads\\faces")
 
     dpg.bind_font(default_font)
     dpg.set_viewport_resize_callback(resize_ui)

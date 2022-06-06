@@ -12,6 +12,7 @@ from core_body_pb2 import BodyRequest
 from core_color_pb2 import ColorRequest
 from core_dogs_pb2 import DogsRequest
 from core_similarities_pb2 import SimilaritiesRequest
+from core_faces_pb2 import FacesRequest
 
 logger = logging.getLogger("Query")
 logger.setLevel(logging.DEBUG)
@@ -32,8 +33,6 @@ class SizeQuery(RabbitMQMessage, GRPCMessage):
     def grpc(self):
         values_raw = self.params[self.params['unit']]
         values = values_raw if isinstance(values_raw, list) else [float(values_raw)]
-        for (k, v) in self.params.items():
-            print(f'{k}:{type(v)}')
         return lambda path: SizeRequest(
             path=path,
             unit=self.params['unit'],
@@ -91,8 +90,16 @@ class FacesQuery(RabbitMQMessage, GRPCMessage):
         return 'faces_smiles'
 
     def grpc(self):
+        faces = int(self.params['no faces']) if 'no faces' in self.params else None
+        smiles = int(self.params['no smiles']) if 'no smiles' in self.params else None
+        threshold = float(self.params['threshold']) if 'threshold' in self.params else None
         return lambda path: FacesRequest(
             path=path,
+            type=self.params['type'],
+            faces=faces,
+            smiles=smiles,
+            comparator=self.params['comparator'],
+            threshold=threshold,
         )
 
     def approved(self, result) -> bool:
@@ -108,9 +115,9 @@ class ColorQuery(RabbitMQMessage, GRPCMessage):
         return 'colors'
 
     def grpc(self):
-        threshold = self.params['threshold'] if 'threshold' in self.params else None
-        percent_threshold = self.params['percent threshold'] if 'percent threshold' in self.params else None
-        tolerance = self.params['tolerance'] if 'tolerance' in self.params else None
+        threshold = float(self.params['threshold']) if 'threshold' in self.params else None
+        percent_threshold = float(self.params['% threshold']) if '% threshold' in self.params else None
+        tolerance = float(self.params['pixel tolerance']) if 'pixel tolerance' in self.params else None
         return lambda path: ColorRequest(
             path=path,
             system=self.params['system'],

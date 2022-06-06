@@ -35,11 +35,11 @@
   },
 
   "Animals": {
-    "type": ["multichoice","tiger","elephant","panda"]
+    "animals": ["multichoice","tiger","elephant","panda"]
   },
 
   "Styles": {
-    "type": ["multichoice","photo","clip art","line drawing"]
+    "styles": ["multichoice","photo","clip art","line drawing"]
   },
 
   "Body": {
@@ -47,6 +47,6 @@
   },
 
   "Formats": {
-    "type": ["multichoice",".jpeg",".jpeg2000",".gif", ".bmp",".png",".webp",".ico",".img",".xcf","cgm",".svg",".blend",".xaml",".pdf",".jpg"]
+    "formats": ["multichoice",".jpeg",".jpeg2000",".gif", ".bmp",".png",".webp",".ico",".img",".xcf","cgm",".svg",".blend",".xaml",".pdf",".jpg"]
   }
 }

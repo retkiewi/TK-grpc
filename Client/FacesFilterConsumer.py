@@ -21,6 +21,7 @@ logger.addHandler(ch)
 SERVICE_NAME = "faces_service"
 QUEUE_CONFIG_NAME = 'faces_smiles'
 
+
 class FacesGRPC(Faces):
     def get_result(self, target, *args, **kwargs):
         logger.info(f'recieved request for path {target.path}')
@@ -32,7 +33,6 @@ def setup_rmq():
     consumer = RabbitMQQueryListener(QUEUE_CONFIG_NAME)
     logger.info("FacesConsumer started successfully")
 
-
     def callback(ch, method, properties, body):
         logger.info(" [x] Received %r" % body)
         try:
@@ -43,8 +43,8 @@ def setup_rmq():
             resp = RabbitMQResponse(500, [], SERVICE_NAME)
         consumer.respond(resp)
 
-
     consumer.listen(callback)
+
 
 def setup_grpc():
     consumer = GRPCQueryListener()
