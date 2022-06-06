@@ -52,6 +52,18 @@ class ColorParams:
         tolerance = float(obj['pixel tolerance']) if 'pixel tolerance' in obj else 0
         return ColorParams(system, color, metric, comparator, threshold, percent_threshold, tolerance)
 
+    @staticmethod
+    def from_grpc(target):
+        system = ColorSystem[target.system]
+        color = ColorParams.__to_rgb(system, [*target.color])
+        metric = ColorMetric[target.metric]
+        comparator = target.comparator
+        threshold = target.threshold
+        percent_threshold = target.percent_threshold
+        tolerance = target.tolerance
+        return ColorParams(system, color, metric, comparator, threshold, percent_threshold, tolerance)
+
+
     # color_repr is either a list of 3 or 4 floats
     @staticmethod
     def __to_rgb(system: ColorSystem, color_repr: List[float]) -> Color:

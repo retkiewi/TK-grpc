@@ -9,6 +9,9 @@ from core_animal_pb2 import AnimalRequest
 from core_format_pb2 import FormatRequest
 from core_style_pb2 import StyleRequest
 from core_body_pb2 import BodyRequest
+from core_color_pb2 import ColorRequest
+from core_dogs_pb2 import DogsRequest
+from core_similarities_pb2 import SimilaritiesRequest
 
 logger = logging.getLogger("Query")
 logger.setLevel(logging.DEBUG)
@@ -29,7 +32,7 @@ class SizeQuery(RabbitMQMessage, GRPCMessage):
     def grpc(self):
         values_raw = self.params[self.params['unit']]
         values = values_raw if isinstance(values_raw, list) else [float(values_raw)]
-        for (k,v) in self.params.items():
+        for (k, v) in self.params.items():
             print(f'{k}:{type(v)}')
         return lambda path: SizeRequest(
             path=path,
@@ -42,7 +45,7 @@ class SizeQuery(RabbitMQMessage, GRPCMessage):
         return result
 
 
-class DogsQuery(RabbitMQMessage):
+class DogsQuery(RabbitMQMessage, GRPCMessage):
     def __init__(self, paths, params, executor):
         super().__init__(paths, params, executor)
 
@@ -50,8 +53,17 @@ class DogsQuery(RabbitMQMessage):
     def topic():
         return 'dogs_breeds'
 
+    def grpc(self):
+        return lambda path: DogsRequest(
+            path=path,
+            breed=self.params['breed']
+        )
 
-class SimilarityQuery(RabbitMQMessage):
+    def approved(self, result) -> bool:
+        return result
+
+
+class SimilarityQuery(RabbitMQMessage, GRPCMessage):
     def __init__(self, paths, params, executor):
         super().__init__(paths, params, executor)
 
@@ -59,8 +71,18 @@ class SimilarityQuery(RabbitMQMessage):
     def topic():
         return 'similarity'
 
+    def grpc(self):
+        return lambda path: SimilaritiesRequest(
+            path=path,
+            percent=float(self.params['percent']),
+            desired_path=self.params['path']
+        )
 
-class FacesQuery(RabbitMQMessage):
+    def approved(self, result) -> bool:
+        return result
+
+
+class FacesQuery(RabbitMQMessage, GRPCMessage):
     def __init__(self, paths, params, executor):
         super().__init__(paths, params, executor)
 
@@ -68,14 +90,40 @@ class FacesQuery(RabbitMQMessage):
     def topic():
         return 'faces_smiles'
 
+    def grpc(self):
+        return lambda path: FacesRequest(
+            path=path,
+        )
 
-class ColorQuery(RabbitMQMessage):
+    def approved(self, result) -> bool:
+        return result
+
+
+class ColorQuery(RabbitMQMessage, GRPCMessage):
     def __init__(self, paths, params, executor):
         super().__init__(paths, params, executor)
 
     @staticmethod
     def topic():
         return 'colors'
+
+    def grpc(self):
+        threshold = self.params['threshold'] if 'threshold' in self.params else None
+        percent_threshold = self.params['percent threshold'] if 'percent threshold' in self.params else None
+        tolerance = self.params['tolerance'] if 'tolerance' in self.params else None
+        return lambda path: ColorRequest(
+            path=path,
+            system=self.params['system'],
+            color=self.params['color'],
+            metric=self.params['metric'],
+            comparator=self.params['comparator'],
+            threshold=threshold,
+            percent_threshold=percent_threshold,
+            tolerance=tolerance,
+        )
+
+    def approved(self, result) -> bool:
+        return result
 
 
 class FormatQuery(GRPCMessage):
@@ -108,6 +156,7 @@ class BodyQuery(GRPCMessage):
         comparator = get_comparator(self.params['comparator'])
         threshold = self.params('threshold')
         return any(map(lambda val: comparator(val, threshold), result))
+
 
 class AnimalQuery(GRPCMessage):
     def __init__(self, paths, params, executor):

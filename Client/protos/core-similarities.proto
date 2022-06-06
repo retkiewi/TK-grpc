@@ -7,7 +7,7 @@ service Similarities {
 message SimilaritiesRequest {
     string path = 1;
     float percent = 2;
-    repeated string paths = 3;
+    string desired_path = 3;
 }
 
 message SimilaritiesResponse {

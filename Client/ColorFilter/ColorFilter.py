@@ -27,11 +27,7 @@ def get_pixel_based_metric(metric: Color.ColorMetric):
     }[metric.name]
 
 
-def process_request(body: str) -> Sequence[str]:
-    request = json.loads(body)
-    paths = request['paths']
-    raw_params = request['params']
-    params = Color.ColorParams.from_object(raw_params)
+def get_filter_func(params):
     comparator = Utils.get_comparator(params.comparator, params.threshold)
 
     if params.metric.name in STAT_METRICS:
@@ -62,7 +58,7 @@ def process_request(body: str) -> Sequence[str]:
             bound_metric = metric(data[0], params.color, params.tolerance)
             compliant_pixels = list(filter(lambda x: bound_metric(x), data))
 
-            percent = 100*len(compliant_pixels)/total
+            percent = 100 * len(compliant_pixels) / total
             print(percent)
             return comparator(percent, params.percent_threshold)
 
@@ -70,5 +66,22 @@ def process_request(body: str) -> Sequence[str]:
         def is_compliant(_):
             return True
 
+    return is_compliant
+
+
+def process_request(body: str) -> Sequence[str]:
+    request = json.loads(body)
+    paths = request['paths']
+    raw_params = request['params']
+    params = Color.ColorParams.from_object(raw_params)
+    is_compliant = get_filter_func(params)
+
     result = list(filter(is_compliant, paths))
     return result
+
+
+def process_single(target):
+    params = Color.ColorParams.from_grpc(target)
+    is_compliant = get_filter_func(params)
+
+    return is_compliant(target.path)

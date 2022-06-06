@@ -1,5 +1,4 @@
-from sympy import true
-from DogsFilter.lib.classifier import classifier 
+from DogsFilter.lib.classifier import classifier
 import json
 import os
 
@@ -40,7 +39,6 @@ def get_filter(breed):
 
 def is_compliant(path, filter_method, breed):
       value = filter_method(path, breed)
-      print(f'Checked({value}) has type: {type(value)}')
       return value
 
 def process_request(body):
@@ -57,5 +55,4 @@ def process_single(query):
     breed = query.breed
     filter_method = get_filter(breed)
     path = query.path
-    res = is_compliant(path, filter)
-    return res
+    return is_compliant(path, filter_method, breed)

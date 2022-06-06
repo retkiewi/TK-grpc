@@ -4,7 +4,8 @@ from random import randrange
 from Utils.Utils import get_comparator
 
 
-def findFaces(img): 
+def findFaces(path): 
+    img = cv2.imread(path)
     trained_face_data = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
     # Convert to grayscale
@@ -15,7 +16,8 @@ def findFaces(img):
 
     return len(face_coordinates)
 
-def findSmiles(img): 
+def findSmiles(path): 
+    img = cv2.imread(path)
     number_of_smiles = 0
     # Load some pre-trained data on face frontals from opencv (haar cascade algorithm)
     face_detector = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -49,6 +51,12 @@ def findSmiles(img):
 
 
 
+def get_filter_and_reference(type, faces, smiles):
+    return  {"faces": (findFaces, faces),
+            "smiles": (findSmiles, smiles),
+            "faces&smiles": (lambda path: [findFaces(path), findSmiles[path]], [faces, smiles])
+            }[type]
+
 def process_request(body: str):
     body = json.loads(body)
     params = body["params"]
@@ -57,15 +65,24 @@ def process_request(body: str):
 
     filtered_paths = []
     comparator = get_comparator(params["comparator"], threshold)
-
+    faces = params["no smiles"]
+    smiles = params["no faces"]
+    filter_method, references = get_filter_and_reference(params["type"], faces, smiles)
     for path in paths:
-        img = cv2.imread(path)
-
-        if "faces" in params["type"] and not comparator(findFaces(img), int(params["no faces"])):
-            continue
-
-        if "smiles" in params["type"] and not comparator(findSmiles(img), int(params["no smiles"])):
-            continue
-        
-        filtered_paths.append(path)
+        if is_compliant(path, filter_method, comparator, references):
+            filtered_paths.append(path)
     return filtered_paths
+
+
+def is_compliant(path, filter_method, comparator, references):
+    values = filter_method(path)
+    refs = [float(reference) if isinstance(reference, str) else reference for reference in references] 
+    return any(map(comparator, values, refs))
+
+
+
+
+def process_single(query):
+    filter_method, references = get_filter_and_reference(query.type, query.faces, query.smiles)
+    comparator = get_comparator(query.comparator, query.threshold)
+    return is_compliant(query.path, filter_method, comparator, references)
