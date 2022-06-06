@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service Similarities {
+    rpc get_result(SimilaritiesRequest) returns (SimilaritiesResponse) {};
+}
+
+message SimilaritiesRequest {
+    string path = 1;
+    float percent = 2;
+    repeated string paths = 3;
+}
+
+message SimilaritiesResponse {
+    bool return_value = 1;
+}

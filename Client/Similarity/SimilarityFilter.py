@@ -42,3 +42,12 @@ def process_request(body, logger):
     result = check_similarity(paths, percent, path, logger)
 
     return result
+
+def process_single(query, logger):
+    path = query.path
+    percent = query.percent
+    paths = query.paths
+
+    result = check_similarity(paths, percent, path, logger)
+
+    return result
