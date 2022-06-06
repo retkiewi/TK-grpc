@@ -1,11 +1,12 @@
 
-
+cd ImageFinderRabbitMqSetupApp
+docker-compose up -d
+call sbt run
+cd ../Client
 python -m pip install -r requirements.txt
-cd src
-
-start cmd /k python -m animal 
-start cmd /k python -m body
-start cmd /k python -m style 
-start cmd /k python -m format 
-start cmd /k python -m core 
-
+start cmd /k python ColorFilterConsumer.py
+start cmd /k python DogFilterConsumer.py
+start cmd /k python SimilarityConsumer.py
+start cmd /k python SizeFilterConsumer.py 
+start cmd /k python FacesFilterConsumer.py
+start cmd /k python App.py 
