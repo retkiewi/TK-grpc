@@ -29,6 +29,7 @@ links = dict()
 links_inv = dict()
 link_parent = dict()
 results = []
+width_control=[]
 
 # Health states:
 # -1 offline
@@ -60,13 +61,6 @@ def resize_ui(sender, app_data):
 
     # render font at higher res and downsample, better then upsampling
     dpg.set_global_font_scale(1 + (h - initial_height) / (4 * initial_height) - 0.5)
-
-    nodes=dpg.get_item_children("node_editor")[1]
-    for n in nodes:
-        print(n)
-        #dpg.set_item_width("width_control",1000)
-        dpg.get_item_width(n)
-        #dpg.set_item_width(n,dpg.get_item_width(n)+10)
 
 
 
@@ -384,7 +378,7 @@ if __name__ == '__main__':
     dpg.set_primary_window("main_window", True)
 
     # debug
-    dpg.show_item_registry()
+    #dpg.show_item_registry()
 
     dpg.start_dearpygui()
     dpg.destroy_context()

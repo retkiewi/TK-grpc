@@ -32,6 +32,17 @@
     "no smiles" : ["float","smiles"],
     "comparator": ["choice_propagate",">",">=","<","<=","=="],
     "threshold": ["float","equal"]
-  }
+  },
 
+  "Animal": {
+    "type": ["choice","tiger","elephant","panda"]
+  },
+
+  "Style": {
+    "type": ["choice","photo","clip art","line drawing"]
+  },
+
+  "Body": {
+    "type": ["choice","hands","face"]
+  }
 }

@@ -14,7 +14,7 @@ class StyleDetector:
     def __init__(self):
         self._sub_key = None
 
-        with open('.skey', 'r') as f:
+        with open('..skey', 'r') as f:
             self._sub_key = f.read().replace('\n', '')
         
         if self._sub_key is None:
