@@ -105,8 +105,9 @@ class BodyQuery(GRPCMessage):
         return lambda path: BodyRequest(path=path, types=self.params['types'])
 
     def approved(self, result) -> bool:
-        return get_comparator(self.params['comparator'])(result, self.params('threshold'))
-
+        comparator = get_comparator(self.params['comparator'])
+        threshold = self.params('threshold')
+        return any(map(lambda val: comparator(val, threshold), result))
 
 class AnimalQuery(GRPCMessage):
     def __init__(self, paths, params, executor):
@@ -120,7 +121,9 @@ class AnimalQuery(GRPCMessage):
         return lambda path: AnimalRequest(path=path, animals=self.params['animals'])
 
     def approved(self, result) -> bool:
-        return get_comparator(self.params['comparator'])(result, self.params('threshold'))
+        comparator = get_comparator(self.params['comparator'])
+        threshold = self.params('threshold')
+        return any(map(lambda val: comparator(val, threshold), result))
 
 
 class StyleQuery(GRPCMessage):

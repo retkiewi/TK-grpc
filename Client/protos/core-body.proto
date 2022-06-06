@@ -2,7 +2,7 @@
 syntax = "proto3";
 
 service Body {
-    rpc detect_body_parts(BodyRequest) returns (BodyResponse) {};
+    rpc get_result(BodyRequest) returns (BodyResponse) {};
 }
 
 message BodyRequest {
@@ -11,5 +11,5 @@ message BodyRequest {
 }
 
 message BodyResponse {
-    repeated float return_values = 1;
+    repeated float return_value = 1;
 }

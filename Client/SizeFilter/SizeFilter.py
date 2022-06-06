@@ -34,8 +34,6 @@ def get_metric(unit):
 def is_compliant(path, metric, comparator, reference):
     value = metric(path)
     ref = [float(reference)] if isinstance(reference, str) else reference
-    print(f'Checked({value}) has type: {type(value)}')
-    print(f'Reference({ref}) has type: {type(ref)}')
     return any(map(comparator, value, ref))
 
 
@@ -53,23 +51,7 @@ def process_request(body: str):
 
 
 def process_single(query):
-    i=0
-    print(f'dupa {i}')
-    i+=1
     metric = get_metric(query.unit)
-    print(f'dupa {i}')
-    i+=1
     comparator = get_comparator(query.comparator, query.threshold)
-    print(f'dupa {i}')
-    i+=1
     reference = query.values
-    print(f'dupa {i}')
-    i+=1
-
-    path = query.path
-    print(f'dupa {i}')
-    i+=1
-    res = is_compliant(path, metric, comparator, reference)
-    print(f'dupa {i}')
-    i+=1
-    return res
+    return is_compliant(query.path, metric, comparator, reference)
