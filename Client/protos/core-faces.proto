@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+service Faces {
+    rpc get_result(FacesRequest) returns (FacesResponse) {};
+}
+
+message FacesRequest {
+    string path = 1;
+    string type = 2;
+    optional int32 faces = 3;
+    optional int32 smiles = 4;
+    string comparator = 5;
+    optional float threshold = 6;
+}
+
+message FacesResponse {
+    bool return_value = 1;
+}

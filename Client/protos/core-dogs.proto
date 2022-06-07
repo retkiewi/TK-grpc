@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service Dogs {
+    rpc get_result(DogsRequest) returns (DogsResponse) {};
+}
+
+message DogsRequest {
+    string path = 1;
+    string breed = 2;
+}
+
+message DogsResponse {
+    bool return_value = 1;
+}

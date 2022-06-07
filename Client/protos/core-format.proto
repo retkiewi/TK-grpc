@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service Format {
+    rpc get_result(FormatRequest) returns (FormatResponse) {};
+}
+
+message FormatRequest {
+    string path = 1;
+    repeated string formats = 2;
+}
+
+message FormatResponse {
+    bool return_value = 1;
+}

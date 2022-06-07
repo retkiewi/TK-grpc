@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+service Size {
+    rpc get_result(SizeRequest) returns (SizeResponse) {};
+}
+
+message SizeRequest {
+    string path = 1;
+    string unit = 2;
+    string comparator = 3;
+    optional float threshold = 4;
+    repeated float values = 5;
+}
+
+message SizeResponse {
+    bool return_value = 1;
+}

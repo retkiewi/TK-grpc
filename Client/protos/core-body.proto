@@ -1,0 +1,15 @@
+
+syntax = "proto3";
+
+service Body {
+    rpc get_result(BodyRequest) returns (BodyResponse) {};
+}
+
+message BodyRequest {
+    string path = 1;
+    repeated string types = 2;
+}
+
+message BodyResponse {
+    repeated float return_value = 1;
+}
