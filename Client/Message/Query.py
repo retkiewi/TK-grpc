@@ -14,6 +14,7 @@ from core_dogs_pb2 import DogsRequest
 from core_similarities_pb2 import SimilaritiesRequest
 from core_faces_pb2 import FacesRequest
 from core_people_pb2 import PeopleRequest
+from core_weather_pb2 import WeatherRequest
 
 logger = logging.getLogger("Query")
 logger.setLevel(logging.DEBUG)
@@ -33,7 +34,8 @@ class SizeQuery(RabbitMQMessage, GRPCMessage):
 
     def grpc(self):
         values_raw = self.params[self.params['unit']]
-        values = values_raw if isinstance(values_raw, list) else [float(values_raw)]
+        values = values_raw if isinstance(values_raw, list) else [
+            float(values_raw)]
         return lambda path: SizeRequest(
             path=path,
             unit=self.params['unit'],
@@ -91,9 +93,12 @@ class FacesQuery(RabbitMQMessage, GRPCMessage):
         return 'faces_smiles'
 
     def grpc(self):
-        faces = int(self.params['no faces']) if 'no faces' in self.params else None
-        smiles = int(self.params['no smiles']) if 'no smiles' in self.params else None
-        threshold = float(self.params['threshold']) if 'threshold' in self.params else None
+        faces = int(self.params['no faces']
+                    ) if 'no faces' in self.params else None
+        smiles = int(self.params['no smiles']
+                     ) if 'no smiles' in self.params else None
+        threshold = float(self.params['threshold']
+                          ) if 'threshold' in self.params else None
         return lambda path: FacesRequest(
             path=path,
             type=self.params['type'],
@@ -116,9 +121,12 @@ class ColorQuery(RabbitMQMessage, GRPCMessage):
         return 'colors'
 
     def grpc(self):
-        threshold = float(self.params['threshold']) if 'threshold' in self.params else None
-        percent_threshold = float(self.params['% threshold']) if '% threshold' in self.params else None
-        tolerance = float(self.params['pixel tolerance']) if 'pixel tolerance' in self.params else None
+        threshold = float(self.params['threshold']
+                          ) if 'threshold' in self.params else None
+        percent_threshold = float(
+            self.params['% threshold']) if '% threshold' in self.params else None
+        tolerance = float(
+            self.params['pixel tolerance']) if 'pixel tolerance' in self.params else None
         return lambda path: ColorRequest(
             path=path,
             system=self.params['system'],
@@ -197,6 +205,7 @@ class StyleQuery(GRPCMessage):
     def approved(self, result) -> bool:
         return result
 
+
 class PeopleQuery(GRPCMessage):
     def __init__(self, paths, params, executor):
         super().__init__(paths, params, executor)
@@ -220,6 +229,25 @@ class PeopleQuery(GRPCMessage):
             path=path,
             has_people=has_people,
             **params
+        )
+
+    def approved(self, result) -> bool:
+        return result
+
+
+class WeatherQuery(GRPCMessage):
+    def __init__(self, paths, params, executor):
+        super().__init__(paths, params, executor)
+
+    @staticmethod
+    def topic():
+        return 'weather'
+
+    def grpc(self):
+        return lambda path: WeatherRequest(
+            path=path,
+            type=self.params['type'],
+            precision=self.params['precision'],
         )
 
     def approved(self, result) -> bool:

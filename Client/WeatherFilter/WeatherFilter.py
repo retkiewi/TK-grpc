@@ -1,6 +1,5 @@
 from WeatherFilter.lib.classifier import classifier
 import json
-import os
 
 
 def run_classifier(path):
@@ -26,3 +25,11 @@ def process_request(body):
     result = check_weather(paths=body["paths"],
                            weather_type=params["type"], precision=params["precision"])
     return result
+
+
+def process_single(query):
+    type = query.type
+    precision = query.precision
+    path = query.path
+    classification = list(run_classifier(path).keys())
+    return type in classification[:precision+1]

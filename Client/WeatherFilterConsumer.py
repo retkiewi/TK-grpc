@@ -1,11 +1,12 @@
 import logging
 import traceback
+from WeatherFilter.WeatherFilter import process_single
 
 from Logger.CustomLogFormatter import CustomLogFormatter
-from RabbitMq.Query import ResultResponse
-from RabbitMq.RabbitMQClient import RabbitMQProducer, RabbitMQSyncConsumer, RabbitMQAsyncConsumer
-from WeatherFilter.WeatherFilter import process_request
-from Utils.Utils import setup_health_consumer
+
+from Client import GRPCQueryListener
+from core_weather_pb2_grpc import Weather, add_WeatherServicer_to_server as add_Weather
+from core_weather_pb2 import WeatherResponse
 
 logger = logging.getLogger("WeatherFilterConsumer")
 logger.setLevel(logging.DEBUG)
@@ -14,27 +15,22 @@ ch.setLevel(logging.DEBUG)
 ch.setFormatter(CustomLogFormatter())
 logger.addHandler(ch)
 
-SERVICE_NAME = "weather_service"
+QUEUE_CONFIG_NAME = 'weather'
+
+
+class WeatherGRPC(Weather):
+    def get_result(self, target, *args, **kwargs):
+        logger.info(f'recieved request for path {target.path}')
+        res = process_single(target)
+        logger.info(f'{res}: {type(res)}')
+        return WeatherResponse(return_value=res)
+
+
+def setup_grpc():
+    consumer = GRPCQueryListener()
+    consumer.listen(lambda server: add_Weather(
+        WeatherGRPC(), server), QUEUE_CONFIG_NAME)
+
 
 if __name__ == '__main__':
-    logger.info("Starting WeatherFilterConsumer")
-    consumer = RabbitMQSyncConsumer.from_config('weather')
-    producer = RabbitMQProducer.from_config()
-    health_consumer = RabbitMQAsyncConsumer.from_config('health')
-    logger.info("WeatherFilterConsumer started successfully")
-
-    logger.info("Starting HealthConsumer")
-    setup_health_consumer(SERVICE_NAME, producer, health_consumer)
-    logger.info("HealthConsumer started successfully")
-
-    def callback(ch, method, properties, body):
-        logger.info(" [x] Received %r" % body)
-        try:
-            result = process_request(body)
-            resp = ResultResponse(200, result, SERVICE_NAME)
-        except Exception as e:
-            logging.error(traceback.format_exc())
-            resp = ResultResponse(500, [], SERVICE_NAME)
-        producer.publish_rmq_message(resp)
-
-    consumer.consume(callback)
+    setup_grpc()
