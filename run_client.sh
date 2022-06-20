@@ -12,3 +12,4 @@ gnome-terminal -- python3 SizeFilterConsumer.py
 gnome-terminal -- python3 FacesFilterConsumer.py
 gnome-terminal -- cd ../peopleServer/build/bin && ./peopleServer
 gnome-terminal -- python3 App.py
+gnome-terminal -- npm start
