@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package metadata;
+
+service Metadata {
+  rpc get_result(MetadataRequest) returns (MetadataResponse) {};
+}
+
+message MetadataRequest {
+  string path = 1;
+  optional float exposureTime = 2;
+  optional float fNumber = 3;
+  optional float focalLength = 4;
+  optional float flash = 5;
+  optional int32 pixelXDimMin = 6;
+  optional int32 pixelXDimMax = 7;
+  optional int32 pixelYDimMin = 8;
+  optional int32 pixelYDimMax = 9;
+}
+
+message MetadataResponse {
+  bool return_value = 1;
+}
