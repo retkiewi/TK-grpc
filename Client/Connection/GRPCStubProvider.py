@@ -27,3 +27,4 @@ class GRPCStubProvider:
             'people': PeopleStub(channel),
             'metadata': MetadataStub(channel),
         }[name]
+        
