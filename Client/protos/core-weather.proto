@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service Weather {
+    rpc get_result(WeatherRequest) returns (WeatherResponse) {};
+}
+
+message WeatherRequest {
+    string path = 1;
+    string type = 2;
+    int32 precision = 3;
+}
+
+message WeatherResponse {
+    bool return_value = 1;
+}

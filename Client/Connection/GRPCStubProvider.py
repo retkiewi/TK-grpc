@@ -10,6 +10,7 @@ from core_faces_pb2_grpc import FacesStub
 from core_people_pb2_grpc import PeopleStub
 from core_text_pb2_grpc import TextStub
 from core_metadata_pb2_grpc import MetadataStub
+from core_weather_pb2_grpc import WeatherStub
 
 
 class GRPCStubProvider:
@@ -28,4 +29,5 @@ class GRPCStubProvider:
             'people': PeopleStub(channel),
             'text': TextStub(channel),
             'metadata': MetadataStub(channel),
+            'weather': WeatherStub(channel)
         }[name]

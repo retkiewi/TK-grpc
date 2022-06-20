@@ -1,52 +1,69 @@
 {
-  "Size":{
-    "unit": ["choice_propagate","pixels","kb","cm"],
-    "pixels":["vec2f","pixels"],
-    "kb": ["float","kb"],
-    "cm": ["vec2f","cm"],
-    "comparator": ["choice_propagate",">",">=","<","<=","=="],
-    "threshold": ["float","equal"]
-  },
+    "Size": {
+        "unit": ["choice_propagate", "pixels", "kb", "cm"],
+        "pixels": ["vec2f", "pixels"],
+        "kb": ["float", "kb"],
+        "cm": ["vec2f", "cm"],
+        "comparator": ["choice_propagate", ">", ">=", "<", "<=", "=="],
+        "threshold": ["float", "equal"]
+    },
 
-  "Colors": {
-    "color": ["color"],
-    "system": ["choice","RGB","HSV","CMYK"],
-    "metric": ["choice_propagate","min","max","mean","median","rms","percentage"],
-    "pixel tolerance": ["float","percentage"],
-    "% threshold": ["float","percentage"],
-    "comparator": ["choice_propagate",">",">=","<","<=","=="],
-    "threshold": ["float","equal"]
-  },
+    "Colors": {
+        "color": ["color"],
+        "system": ["choice", "RGB", "HSV", "CMYK"],
+        "metric": [
+            "choice_propagate",
+            "min",
+            "max",
+            "mean",
+            "median",
+            "rms",
+            "percentage"
+        ],
+        "pixel tolerance": ["float", "percentage"],
+        "% threshold": ["float", "percentage"],
+        "comparator": ["choice_propagate", ">", ">=", "<", "<=", "=="],
+        "threshold": ["float", "equal"]
+    },
 
-  "Dogs": {
-    "breed": ["choice","Any","dalmatian","cocker", "bulldog", "boxer", "corgi", "golden retriever"]
-  },
+    "Dogs": {
+        "breed": [
+            "choice",
+            "Any",
+            "dalmatian",
+            "cocker",
+            "bulldog",
+            "boxer",
+            "corgi",
+            "golden retriever"
+        ]
+    },
 
-  "Similarity": {
-    "path": ["file_selector","Path"],
-    "percent": ["float", "Similarity percent"]
-  },
-  "Faces": {
-    "type": ["choice_propagate","faces","smiles","faces&smiles"],
-    "no faces" : ["float","faces"],
-    "no smiles" : ["float","smiles"],
-    "comparator": ["choice_propagate",">",">=","<","<=","=="],
-    "threshold": ["float","equal"]
-  },
+    "Similarity": {
+        "path": ["file_selector", "Path"],
+        "percent": ["float", "Similarity percent"]
+    },
+    "Faces": {
+        "type": ["choice_propagate", "faces", "smiles", "faces&smiles"],
+        "no faces": ["float", "faces"],
+        "no smiles": ["float", "smiles"],
+        "comparator": ["choice_propagate", ">", ">=", "<", "<=", "=="],
+        "threshold": ["float", "equal"]
+    },
 
-  "Animals": {
-    "animals": ["multichoice","tiger","elephant","panda"],
-    "minimal weight": ["float","minimal_weight"]
-  },
+    "Animals": {
+        "animals": ["multichoice", "tiger", "elephant", "panda"],
+        "minimal weight": ["float", "minimal_weight"]
+    },
 
-  "Styles": {
-    "styles": ["multichoice","photo","clip art","line drawing"]
-  },
+    "Styles": {
+        "styles": ["multichoice", "photo", "clip art", "line drawing"]
+    },
 
-  "Body": {
-    "types": ["multichoice","hands","face"],
-    "minimal weight": ["float","minimal weight"]
-  },
+    "Body": {
+        "types": ["multichoice", "hands", "face"],
+        "minimal weight": ["float", "minimal weight"]
+    },
 
   "Formats": {
     "formats": ["multichoice",".jpeg",".jpeg2000",".gif", ".bmp",".png",".webp",".ico",".img",".xcf","cgm",".svg",".blend",".xaml",".pdf",".jpg"]
@@ -72,5 +89,29 @@
 	  "max pixel width": ["int"],
 	  "min pixel height": ["int"],
 	  "max pixel height": ["int"]
-  }
+  },
+
+    "Weather": {
+        "type": [
+            "choice",
+            "mostlycloudy",
+            "moderate rain",
+            "clear",
+            "rain showers",
+            "mainly clear",
+            "cloudy",
+            "snow",
+            "fog",
+            "rain",
+            "drizzle",
+            "rain fog"
+        ],
+        "precision": ["int_range", 0, 9]
+    },
+
+    "People": {
+        "has people": ["choice_propagate", "true", "false"],
+        "min people": ["int", "true"],
+        "max people": ["int", "true"]
+    }
 }

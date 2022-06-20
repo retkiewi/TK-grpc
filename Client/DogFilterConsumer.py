@@ -19,6 +19,7 @@ logger.addHandler(ch)
 SERVICE_NAME = "dog_service"
 QUEUE_CONFIG_NAME = 'dogs_breeds'
 
+
 class DogsGRPC(Dogs):
     def get_result(self, target, *args, **kwargs):
         logger.info(f'recieved request for path {target.path}')
@@ -26,11 +27,11 @@ class DogsGRPC(Dogs):
         logger.info(f'{res}: {type(res)}')
         return DogsResponse(return_value=res)
 
+
 def setup_rmq():
     logger.info("Starting SimilarityConsumer")
     consumer = RabbitMQQueryListener(QUEUE_CONFIG_NAME)
     logger.info("SimilarityConsumer started successfully")
-
 
     def callback(ch, method, properties, body):
         logger.info(" [x] Received %r" % body)
@@ -42,12 +43,14 @@ def setup_rmq():
             resp = RabbitMQResponse(500, [], SERVICE_NAME)
         consumer.respond(resp)
 
-
     consumer.listen(callback)
+
 
 def setup_grpc():
     consumer = GRPCQueryListener()
-    consumer.listen(lambda server: add_Dogs(DogsGRPC(), server), QUEUE_CONFIG_NAME)
+    consumer.listen(lambda server: add_Dogs(
+        DogsGRPC(), server), QUEUE_CONFIG_NAME)
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] == 'rmq':

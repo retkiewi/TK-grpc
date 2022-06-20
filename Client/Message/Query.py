@@ -16,6 +16,7 @@ from core_faces_pb2 import FacesRequest
 from core_people_pb2 import PeopleRequest
 from core_text_pb2 import TextRequest
 from core_metadata_pb2 import MetadataRequest
+from core_weather_pb2 import WeatherRequest
 
 logger = logging.getLogger("Query")
 logger.setLevel(logging.DEBUG)
@@ -234,7 +235,26 @@ class PeopleQuery(GRPCMessage):
         return result
 
 
+class WeatherQuery(GRPCMessage):
+    def __init__(self, paths, params, executor):
+        super().__init__(paths, params, executor)
+
+    @staticmethod
+    def topic():
+        return 'weather'
+
+    def grpc(self):
+        return lambda path: WeatherRequest(
+            path=path,
+            type=self.params['type'],
+            precision=self.params['precision'],
+        )
+
+    def approved(self, result) -> bool:
+        return result
+    
 class MetadataQuery(GRPCMessage):
+
     def __init__(self, paths, params, executor):
         super().__init__(paths, params, executor)
 
@@ -267,6 +287,7 @@ class MetadataQuery(GRPCMessage):
             image_path=path,
             hasText=hasText,
             **params
+
         )
 
     def approved(self, result) -> bool:

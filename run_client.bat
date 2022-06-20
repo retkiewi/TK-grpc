@@ -14,6 +14,7 @@ Rem start cmd /k python DogFilterConsumer.py grpc
 Rem start cmd /k python SimilarityConsumer.py grpc
 start cmd /k python SizeFilterConsumer.py grpc
 Rem start cmd /k python FacesFilterConsumer.py grpc
+start cmd /k python WeatherFilterConsumer.py
 start cmd /k python -m animal
 start cmd /k python -m body
 start cmd /k python -m style
