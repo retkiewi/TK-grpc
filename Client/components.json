@@ -50,5 +50,10 @@
 
   "Formats": {
     "formats": ["multichoice",".jpeg",".jpeg2000",".gif", ".bmp",".png",".webp",".ico",".img",".xcf","cgm",".svg",".blend",".xaml",".pdf",".jpg"]
+  },
+  "People": {
+    "has people": ["choice_propagate", "true", "false"],
+    "min people": ["int", "true"],
+    "max people": ["int", "true"]
   }
 }

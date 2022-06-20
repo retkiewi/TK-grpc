@@ -158,8 +158,12 @@ def add_node(sender, app, u):
                     with dpg.group(xoffset=120, horizontal=True, show=show_input):
                         dpg.add_text(k, label=k)
                         dpg.add_input_text(width=150, default_value="0")
+                elif v_filtered[0] == "int":
+                    with dpg.group(xoffset=120, horizontal=True, show=show_input):
+                        dpg.add_text(k, label=k)
+                        dpg.add_input_text(
+                            width=150, default_value="", no_spaces=True, decimal=True)
                 elif v_filtered[0] == "vec2f":
-
                     with dpg.group(xoffset=120, horizontal=True, show=show_input):
                         dpg.add_text(k, label=k)
                         dpg.add_input_floatx(size=2, width=150, default_value=(0, 0))
@@ -195,10 +199,10 @@ def add_node(sender, app, u):
                         for i in v_filtered[1:]:
                             dpg.add_checkbox(label=i)
 
-            dpg.add_spacer(label="spacer",height=20,width=150)
-            with dpg.group(xoffset=120, horizontal=True, show=True):
-                dpg.add_text("Executor", label="Executor")
-                dpg.add_combo(["RabbitMQ", "GRPC"], width=150, default_value="GRPC")
+            # dpg.add_spacer(label="spacer",height=20,width=150)
+            # with dpg.group(xoffset=120, horizontal=True, show=True):
+            #     dpg.add_text("Executor", label="Executor")
+            #     dpg.add_combo(["RabbitMQ", "GRPC"], width=150, default_value="GRPC")
 
 
         with dpg.node_attribute(attribute_type=dpg.mvNode_Attr_Output):
@@ -236,7 +240,7 @@ def execute_sequence(query_executor):
     while (True):
         data = {}
         children = dpg.get_item_children(next)[1]
-        executor_type = 0
+        executor_type = 2
         for id in children:
             if(dpg.get_item_label(id)=="spacer"):
                 continue
@@ -259,12 +263,12 @@ def execute_sequence(query_executor):
             else:
                 data[dpg.get_item_label(id0)] = dpg.get_value(id)
 
-            if dpg.get_item_label(id0) == "Executor":
-                field_val = dpg.get_value(id)
-                if (field_val == "RabbitMQ"):
-                    executor_type = 1
-                else:
-                    executor_type = 2
+            # if dpg.get_item_label(id0) == "Executor":
+            #     field_val = dpg.get_value(id)
+            #     if (field_val == "RabbitMQ"):
+            #         executor_type = 1
+            #     else:
+            #         executor_type = 2
 
         value = (QueryBuilder()
                  .query_type(dpg.get_item_label(dpg.get_item_parent(next)))
@@ -378,7 +382,7 @@ if __name__ == '__main__':
                              tracked=True) as node_editor:
             with dpg.node(label="Input", tag="input"):
                 with dpg.node_attribute(tag="input_param", attribute_type=dpg.mvNode_Attr_Output):
-                    dpg.add_input_text(label="root path", width=150, tag="root_path", default_value="D:\\repos\\TK2\\TK\\ImageDownloader\\downloads\\faces")
+                    dpg.add_input_text(label="root path", width=150, tag="root_path", default_value="")
 
     dpg.bind_font(default_font)
     dpg.set_viewport_resize_callback(resize_ui)

@@ -1,4 +1,5 @@
 .skey
+.vscode
 
 # grpc
 *_pb2*.py

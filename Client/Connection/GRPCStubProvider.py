@@ -7,6 +7,7 @@ from core_color_pb2_grpc import ColorStub
 from core_dogs_pb2_grpc import DogsStub
 from core_similarities_pb2_grpc import SimilaritiesStub
 from core_faces_pb2_grpc import FacesStub
+from core_people_pb2_grpc import PeopleStub
 
 
 class GRPCStubProvider:
@@ -21,5 +22,6 @@ class GRPCStubProvider:
             'colors': ColorStub(channel),
             'dogs_breeds': DogsStub(channel),
             'similarity': SimilaritiesStub(channel),
-            'faces_smiles': FacesStub(channel)
+            'faces_smiles': FacesStub(channel),
+            'people': PeopleStub(channel)
         }[name]
