@@ -55,5 +55,12 @@
     "has people": ["choice_propagate", "true", "false"],
     "min people": ["int", "true"],
     "max people": ["int", "true"]
+  },
+  
+  "Text": {
+    "hasText": ["choice_propagate", "true", "false"],
+    "containsText": ["string", "true"],
+    "minLength": ["int", "true"],
+    "maxLength": ["int", "true"]
   }
 }

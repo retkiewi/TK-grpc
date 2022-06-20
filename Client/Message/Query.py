@@ -14,6 +14,7 @@ from core_dogs_pb2 import DogsRequest
 from core_similarities_pb2 import SimilaritiesRequest
 from core_faces_pb2 import FacesRequest
 from core_people_pb2 import PeopleRequest
+from core_text_pb2 import TextRequest
 
 logger = logging.getLogger("Query")
 logger.setLevel(logging.DEBUG)
@@ -219,6 +220,45 @@ class PeopleQuery(GRPCMessage):
         return lambda path: PeopleRequest(
             path=path,
             has_people=has_people,
+            **params
+        )
+
+    def approved(self, result) -> bool:
+        return result
+
+
+class TextQuery(GRPCMessage):
+    def __init__(self, paths, params, executor):
+        super().__init__(paths, params, executor)
+
+    @staticmethod
+    def topic():
+        return 'text'
+
+    def grpc(self):
+        hasText = False
+        if self.params['hasText'] == "true":
+            hasText = True
+
+        params = dict()
+        if 'minLength' in self.params:
+            params['minLength'] = int(self.params['minLength'])
+        else:
+            params['minLength'] = -1
+
+        if 'maxLength' in self.params:
+            params['maxLength'] = int(self.params['maxLength'])
+        else:
+            params['maxLength'] = -1
+        
+        if 'containsText' in self.params:
+            params['containsText'] = self.params['containsText']
+        else:
+            params['containsText'] = ''
+
+        return lambda path: TextRequest(
+            image_path=path,
+            hasText=hasText,
             **params
         )
 

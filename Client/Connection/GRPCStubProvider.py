@@ -8,6 +8,7 @@ from core_dogs_pb2_grpc import DogsStub
 from core_similarities_pb2_grpc import SimilaritiesStub
 from core_faces_pb2_grpc import FacesStub
 from core_people_pb2_grpc import PeopleStub
+from core_text_pb2_grpc import TextStub
 
 
 class GRPCStubProvider:
@@ -23,5 +24,6 @@ class GRPCStubProvider:
             'dogs_breeds': DogsStub(channel),
             'similarity': SimilaritiesStub(channel),
             'faces_smiles': FacesStub(channel),
-            'people': PeopleStub(channel)
+            'people': PeopleStub(channel),
+            'text': TextStub(channel)
         }[name]
