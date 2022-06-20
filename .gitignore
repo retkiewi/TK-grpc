@@ -3,6 +3,9 @@
 
 # grpc
 *_pb2*.py
+*_pb*.js
+metadatarequest.js
+metadataresponse.js
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
