@@ -382,7 +382,7 @@ if __name__ == '__main__':
                              tracked=True) as node_editor:
             with dpg.node(label="Input", tag="input"):
                 with dpg.node_attribute(tag="input_param", attribute_type=dpg.mvNode_Attr_Output):
-                    dpg.add_input_text(label="root path", width=150, tag="root_path", default_value="C:/STUDIA2/komponentowe/tk-2022/resources/people")
+                    dpg.add_input_text(label="root path", width=150, tag="root_path", default_value="")
 
     dpg.bind_font(default_font)
     dpg.set_viewport_resize_callback(resize_ui)

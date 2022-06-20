@@ -209,15 +209,12 @@ class PeopleQuery(GRPCMessage):
         has_people = False
         if self.params['has people'] == "true":
             has_people = True
-        # min_people = int(self.params['min people']) if 'min people' in self.params else None
-        # max_people = int(self.params['max people']) if 'max people' in self.params else None
 
         params = dict()
         if 'min people' in self.params:
             params['min_people'] = int(self.params['min people'])
         if 'max people' in self.params:
             params['max_people'] = int(self.params['max people'])
-        print(has_people, params)
 
         return lambda path: PeopleRequest(
             path=path,
