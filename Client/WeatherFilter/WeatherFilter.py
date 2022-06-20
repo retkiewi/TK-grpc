@@ -1,4 +1,4 @@
-from WeatherFilter.lib.classifier import classifier
+from WeatherFilter.model.classifier import classifier
 import json
 
 
