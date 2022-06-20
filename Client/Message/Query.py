@@ -14,6 +14,7 @@ from core_dogs_pb2 import DogsRequest
 from core_similarities_pb2 import SimilaritiesRequest
 from core_faces_pb2 import FacesRequest
 from core_people_pb2 import PeopleRequest
+from core_text_pb2 import TextRequest
 from core_metadata_pb2 import MetadataRequest
 from core_weather_pb2 import WeatherRequest
 
@@ -216,7 +217,7 @@ class PeopleQuery(GRPCMessage):
         return 'people'
 
     def grpc(self):
-        has_people =  self.params['has people'] == "true"
+        has_people = self.params['has people'] == "true"
 
         params = dict()
         if 'min people' in self.params:
@@ -259,32 +260,74 @@ class MetadataQuery(GRPCMessage):
 
     @staticmethod
     def topic():
-        return 'metadata'
+        return 'text'
 
     def grpc(self):
+        hasText = False
+        if self.params['hasText'] == "true":
+            hasText = True
+
         params = dict()
+        if 'minLength' in self.params:
+            params['minLength'] = int(self.params['minLength'])
+        else:
+            params['minLength'] = -1
 
-        if 'exposure time' in self.params:
-            params['exposureTime'] = float(self.params['exposure time'])
-        if 'f number' in self.params:
-            params['fNumber'] = float(self.params['f number'])
-        if 'focal length' in self.params:
-            params['focalLength'] = float(self.params['focal length'])
-        if 'flash' in self.params:
-            params['flash'] = float(self.params['flash'])
-        if 'min pixel width' in self.params:
-            params['pixelXDimMin'] = int(self.params['min pixel width'])
-        if 'max pixel width' in self.params:
-            params['pixelXDimMax'] = int(self.params['max pixel width'])
-        if 'min pixel height' in self.params:
-            params['pixelYDimMin'] = int(self.params['min pixel height'])
-        if 'max pixel height' in self.params:
-            params['pixelYDimMax'] = int(self.params['max pixel height'])
+        if 'maxLength' in self.params:
+            params['maxLength'] = int(self.params['maxLength'])
+        else:
+            params['maxLength'] = -1
 
-        return lambda path: MetadataRequest(
-            path=path,
+        if 'containsText' in self.params:
+            params['containsText'] = self.params['containsText']
+        else:
+            params['containsText'] = ''
+
+        return lambda path: TextRequest(
+            image_path=path,
+            hasText=hasText,
             **params
 
+        )
+
+    def approved(self, result) -> bool:
+        return result
+
+
+class TextQuery(GRPCMessage):
+
+    def __init__(self, paths, params, executor):
+        super().__init__(paths, params, executor)
+
+    @staticmethod
+    def topic():
+        return 'text'
+
+    def grpc(self):
+        hasText = False
+        if self.params['hasText'] == "true":
+            hasText = True
+
+        params = dict()
+        if 'minLength' in self.params:
+            params['minLength'] = int(self.params['minLength'])
+        else:
+            params['minLength'] = -1
+
+        if 'maxLength' in self.params:
+            params['maxLength'] = int(self.params['maxLength'])
+        else:
+            params['maxLength'] = -1
+
+        if 'containsText' in self.params:
+            params['containsText'] = self.params['containsText']
+        else:
+            params['containsText'] = ''
+
+        return lambda path: TextRequest(
+            image_path=path,
+            hasText=hasText,
+            **params
         )
 
     def approved(self, result) -> bool:

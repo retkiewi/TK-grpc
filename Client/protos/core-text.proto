@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+service Text {
+  rpc get_result (TextRequest) returns (TextReply) {}
+}
+
+message TextRequest {
+  string image_path = 1;
+  bool hasText = 2;
+  string containsText = 3;
+  int32 minLength = 4;
+  int32 maxLength = 5;
+}
+
+message TextReply {
+    bool return_value = 1;
+}

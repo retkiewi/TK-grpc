@@ -20,5 +20,6 @@ start cmd /k python -m body
 start cmd /k python -m style
 start cmd /k python -m format
 start "server-people" cmd.exe /k "cd ../peopleServer/build/bin && peopleServer.exe"
+start "server-text" cmd.exe /k "cd ../text_server && mix grpc.server"
 start cmd /k python App.py
 start cmd /k npm start

@@ -73,6 +73,13 @@
     "min people": ["int", "true"],
     "max people": ["int", "true"]
   },
+  
+  "Text": {
+    "hasText": ["choice_propagate", "true", "false"],
+    "containsText": ["string", "true"],
+    "minLength": ["int", "true"],
+    "maxLength": ["int", "true"]
+  },
   "Metadata": {
 	  "exposure time": ["optional_float", "exposureTime"],
 	  "f number": ["optional_float", "fNumber"],
