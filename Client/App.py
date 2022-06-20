@@ -167,6 +167,10 @@ def add_node(sender, app, u):
                         dpg.add_text(k, label=k)
                         dpg.add_input_text(
                             width=150, default_value="", no_spaces=True, decimal=True)
+                elif v_filtered[0] == "string":
+                    with dpg.group(xoffset=120, horizontal=True, show=show_input):
+                        dpg.add_text(k, label=k)
+                        dpg.add_input_text(width=150, default_value="")
                 elif v_filtered[0] == "vec2f":
                     with dpg.group(xoffset=120, horizontal=True, show=show_input):
                         dpg.add_text(k, label=k)
