@@ -13,6 +13,7 @@ from core_color_pb2 import ColorRequest
 from core_dogs_pb2 import DogsRequest
 from core_similarities_pb2 import SimilaritiesRequest
 from core_faces_pb2 import FacesRequest
+from core_people_pb2 import PeopleRequest
 
 logger = logging.getLogger("Query")
 logger.setLevel(logging.DEBUG)
@@ -192,6 +193,37 @@ class StyleQuery(GRPCMessage):
 
     def grpc(self):
         return lambda path: StyleRequest(path=path, styles=self.params['styles'])
+
+    def approved(self, result) -> bool:
+        return result
+
+class PeopleQuery(GRPCMessage):
+    def __init__(self, paths, params, executor):
+        super().__init__(paths, params, executor)
+
+    @staticmethod
+    def topic():
+        return 'people'
+
+    def grpc(self):
+        has_people = False
+        if self.params['has people'] == "true":
+            has_people = True
+        # min_people = int(self.params['min people']) if 'min people' in self.params else None
+        # max_people = int(self.params['max people']) if 'max people' in self.params else None
+
+        params = dict()
+        if 'min people' in self.params:
+            params['min_people'] = int(self.params['min people'])
+        if 'max people' in self.params:
+            params['max_people'] = int(self.params['max people'])
+        print(has_people, params)
+
+        return lambda path: PeopleRequest(
+            path=path,
+            has_people=has_people,
+            **params
+        )
 
     def approved(self, result) -> bool:
         return result

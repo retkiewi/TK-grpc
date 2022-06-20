@@ -18,4 +18,5 @@ start cmd /k python -m animal
 start cmd /k python -m body
 start cmd /k python -m style
 start cmd /k python -m format
+start "server-people" cmd.exe /k "cd ../peopleServer/build/bin && peopleServer.exe"
 start cmd /k python App.py
