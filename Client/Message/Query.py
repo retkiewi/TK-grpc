@@ -14,6 +14,7 @@ from core_dogs_pb2 import DogsRequest
 from core_similarities_pb2 import SimilaritiesRequest
 from core_faces_pb2 import FacesRequest
 from core_people_pb2 import PeopleRequest
+from core_metadata_pb2 import MetadataRequest
 from core_weather_pb2 import WeatherRequest
 
 logger = logging.getLogger("Query")
@@ -215,9 +216,7 @@ class PeopleQuery(GRPCMessage):
         return 'people'
 
     def grpc(self):
-        has_people = False
-        if self.params['has people'] == "true":
-            has_people = True
+        has_people =  self.params['has people'] == "true"
 
         params = dict()
         if 'min people' in self.params:
@@ -248,6 +247,44 @@ class WeatherQuery(GRPCMessage):
             path=path,
             type=self.params['type'],
             precision=self.params['precision'],
+        )
+
+    def approved(self, result) -> bool:
+        return result
+    
+class MetadataQuery(GRPCMessage):
+
+    def __init__(self, paths, params, executor):
+        super().__init__(paths, params, executor)
+
+    @staticmethod
+    def topic():
+        return 'metadata'
+
+    def grpc(self):
+        params = dict()
+
+        if 'exposure time' in self.params:
+            params['exposureTime'] = float(self.params['exposure time'])
+        if 'f number' in self.params:
+            params['fNumber'] = float(self.params['f number'])
+        if 'focal length' in self.params:
+            params['focalLength'] = float(self.params['focal length'])
+        if 'flash' in self.params:
+            params['flash'] = float(self.params['flash'])
+        if 'min pixel width' in self.params:
+            params['pixelXDimMin'] = int(self.params['min pixel width'])
+        if 'max pixel width' in self.params:
+            params['pixelXDimMax'] = int(self.params['max pixel width'])
+        if 'min pixel height' in self.params:
+            params['pixelYDimMin'] = int(self.params['min pixel height'])
+        if 'max pixel height' in self.params:
+            params['pixelYDimMax'] = int(self.params['max pixel height'])
+
+        return lambda path: MetadataRequest(
+            path=path,
+            **params
+
         )
 
     def approved(self, result) -> bool:

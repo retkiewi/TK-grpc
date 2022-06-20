@@ -65,26 +65,24 @@
         "minimal weight": ["float", "minimal weight"]
     },
 
-    "Formats": {
-        "formats": [
-            "multichoice",
-            ".jpeg",
-            ".jpeg2000",
-            ".gif",
-            ".bmp",
-            ".png",
-            ".webp",
-            ".ico",
-            ".img",
-            ".xcf",
-            "cgm",
-            ".svg",
-            ".blend",
-            ".xaml",
-            ".pdf",
-            ".jpg"
-        ]
-    },
+  "Formats": {
+    "formats": ["multichoice",".jpeg",".jpeg2000",".gif", ".bmp",".png",".webp",".ico",".img",".xcf","cgm",".svg",".blend",".xaml",".pdf",".jpg"]
+  },
+  "People": {
+    "has people": ["choice_propagate", "true", "false"],
+    "min people": ["int", "true"],
+    "max people": ["int", "true"]
+  },
+  "Metadata": {
+	  "exposure time": ["optional_float", "exposureTime"],
+	  "f number": ["optional_float", "fNumber"],
+	  "focal length": ["optional_float", "focalLength"],
+	  "flash": ["optional_float", "flash"],
+	  "min pixel width": ["int"],
+	  "max pixel width": ["int"],
+	  "min pixel height": ["int"],
+	  "max pixel height": ["int"]
+  },
 
     "Weather": {
         "type": [
