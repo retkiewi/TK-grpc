@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+service People {
+    rpc get_result(PeopleRequest) returns (PeopleResponse) {};
+}
+
+message PeopleRequest {
+    string path = 1;
+    bool has_people = 2;
+    optional int32 min_people = 3;
+    optional int32 max_people = 4;
+}
+
+message PeopleResponse {
+    bool return_value = 1;
+}

@@ -102,5 +102,10 @@
             "rain fog"
         ],
         "precision": ["int_range", 0, 9]
+    },
+    "People": {
+        "has people": ["choice_propagate", "true", "false"],
+        "min people": ["int", "true"],
+        "max people": ["int", "true"]
     }
 }

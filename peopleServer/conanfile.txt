@@ -1,0 +1,9 @@
+[requires]
+opencv/4.5.5
+grpc/1.45.2
+protobuf/3.20.0
+argparse/2.5
+
+[generators]
+CMakeDeps
+CMakeToolchain
