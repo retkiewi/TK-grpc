@@ -47,7 +47,8 @@ class QueryBuilder:
             'Animals': AnimalQuery(self.__query_paths, self.__query_data, self.__executor),
             'Styles': StyleQuery(self.__query_paths, self.__query_data, self.__executor),
             'People': PeopleQuery(self.__query_paths, self.__query_data, self.__executor),
-            'Text': TextQuery(self.__query_paths, self.__query_data, self.__executor)
+            'Text': TextQuery(self.__query_paths, self.__query_data, self.__executor),
+            'Metadata': MetadataQuery(self.__query_paths, self.__query_data, self.__executor)
         }[self.__query_type]
 
 

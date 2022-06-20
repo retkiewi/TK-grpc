@@ -15,6 +15,7 @@ from core_similarities_pb2 import SimilaritiesRequest
 from core_faces_pb2 import FacesRequest
 from core_people_pb2 import PeopleRequest
 from core_text_pb2 import TextRequest
+from core_metadata_pb2 import MetadataRequest
 
 logger = logging.getLogger("Query")
 logger.setLevel(logging.DEBUG)
@@ -34,7 +35,8 @@ class SizeQuery(RabbitMQMessage, GRPCMessage):
 
     def grpc(self):
         values_raw = self.params[self.params['unit']]
-        values = values_raw if isinstance(values_raw, list) else [float(values_raw)]
+        values = values_raw if isinstance(values_raw, list) else [
+            float(values_raw)]
         return lambda path: SizeRequest(
             path=path,
             unit=self.params['unit'],
@@ -92,9 +94,12 @@ class FacesQuery(RabbitMQMessage, GRPCMessage):
         return 'faces_smiles'
 
     def grpc(self):
-        faces = int(self.params['no faces']) if 'no faces' in self.params else None
-        smiles = int(self.params['no smiles']) if 'no smiles' in self.params else None
-        threshold = float(self.params['threshold']) if 'threshold' in self.params else None
+        faces = int(self.params['no faces']
+                    ) if 'no faces' in self.params else None
+        smiles = int(self.params['no smiles']
+                     ) if 'no smiles' in self.params else None
+        threshold = float(self.params['threshold']
+                          ) if 'threshold' in self.params else None
         return lambda path: FacesRequest(
             path=path,
             type=self.params['type'],
@@ -117,9 +122,12 @@ class ColorQuery(RabbitMQMessage, GRPCMessage):
         return 'colors'
 
     def grpc(self):
-        threshold = float(self.params['threshold']) if 'threshold' in self.params else None
-        percent_threshold = float(self.params['% threshold']) if '% threshold' in self.params else None
-        tolerance = float(self.params['pixel tolerance']) if 'pixel tolerance' in self.params else None
+        threshold = float(self.params['threshold']
+                          ) if 'threshold' in self.params else None
+        percent_threshold = float(
+            self.params['% threshold']) if '% threshold' in self.params else None
+        tolerance = float(
+            self.params['pixel tolerance']) if 'pixel tolerance' in self.params else None
         return lambda path: ColorRequest(
             path=path,
             system=self.params['system'],
@@ -198,6 +206,7 @@ class StyleQuery(GRPCMessage):
     def approved(self, result) -> bool:
         return result
 
+
 class PeopleQuery(GRPCMessage):
     def __init__(self, paths, params, executor):
         super().__init__(paths, params, executor)
@@ -207,9 +216,7 @@ class PeopleQuery(GRPCMessage):
         return 'people'
 
     def grpc(self):
-        has_people = False
-        if self.params['has people'] == "true":
-            has_people = True
+        has_people = self.params['has people'] == "true"
 
         params = dict()
         if 'min people' in self.params:
@@ -227,7 +234,7 @@ class PeopleQuery(GRPCMessage):
         return result
 
 
-class TextQuery(GRPCMessage):
+class MetadataQuery(GRPCMessage):
     def __init__(self, paths, params, executor):
         super().__init__(paths, params, executor)
 
@@ -250,7 +257,47 @@ class TextQuery(GRPCMessage):
             params['maxLength'] = int(self.params['maxLength'])
         else:
             params['maxLength'] = -1
-        
+
+        if 'containsText' in self.params:
+            params['containsText'] = self.params['containsText']
+        else:
+            params['containsText'] = ''
+
+        return lambda path: TextRequest(
+            image_path=path,
+            hasText=hasText,
+            **params
+        )
+
+    def approved(self, result) -> bool:
+        return result
+
+
+class TextQuery(GRPCMessage):
+
+    def __init__(self, paths, params, executor):
+        super().__init__(paths, params, executor)
+
+    @staticmethod
+    def topic():
+        return 'text'
+
+    def grpc(self):
+        hasText = False
+        if self.params['hasText'] == "true":
+            hasText = True
+
+        params = dict()
+        if 'minLength' in self.params:
+            params['minLength'] = int(self.params['minLength'])
+        else:
+            params['minLength'] = -1
+
+        if 'maxLength' in self.params:
+            params['maxLength'] = int(self.params['maxLength'])
+        else:
+            params['maxLength'] = -1
+
         if 'containsText' in self.params:
             params['containsText'] = self.params['containsText']
         else:
